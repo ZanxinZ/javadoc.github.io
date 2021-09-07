@@ -1,0 +1,5 @@
+baseURL = 'http://example.org/'
+languageCode = 'en-us'
+title = '技术学习心得'
+theme = "hugo-geekdoc"
+publishdir = "./docs/"
