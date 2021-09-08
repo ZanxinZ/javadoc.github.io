@@ -10,11 +10,15 @@
 
 
 
-    <meta name="description" content="技术学习笔记">
+    <meta name="description" content="1. 单例模式下并发访问同一个对象的内容    synchnized 同步锁，使得调用方法变成同步访问对象属性。
+2.多个对象多把锁    方法带有 synchronized 则一个对象带有一把锁，多个对象在 JVM 中是异步的，所以多个对象的多把锁表现为异步的。
+3. 脏读    setValue() 时，中途进行 getValue() ，如果 getValue() 没有同步则可能出现脏读。
+同步锁作用于对象，非同步方法可以异步调用，同一对象的多个同步方法是同步调用。
+public class MyObject { private String userName = &#34;A&#34;; private String password = &#34;AA&#34;; synchronized public void setValue(String userName, String password){ this.userName = userName; try { Thread.sleep(3000);//delay cause the dirtyRead  }catch (Exception e){ } this.password = password; } public void getValue(){ System.">
 
 
 
-    <title>Blog | 技术学习笔记</title>
+    <title>2.1同步 | 技术学习笔记</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -35,7 +39,6 @@
 <link rel="preload" href="/custom.css" as="style">
 <link rel="stylesheet" href="/custom.css" media="all">
 
-<link rel="alternate" type="application/rss+xml" href="http://example.org/blog/index.xml" title="技术学习笔记" />
 
 
 <!-- Made with Geekdoc theme https://github.com/thegeeklab/hugo-geekdoc -->
@@ -240,7 +243,7 @@
             
             
                 <span class="flex">
-                    <a href="/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.1%E5%90%8C%E6%AD%A5/" class="gdoc-nav__entry ">
+                    <a href="/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.1%E5%90%8C%E6%AD%A5/" class="gdoc-nav__entry is-active">
                         2.1同步
                     </a>
                 </span>
@@ -412,7 +415,15 @@
         
     
     
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>Blog</span><meta itemprop='position' content='2' /></li>
+        
+        
+        
+        
+    
+    
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/' href='/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/'><span itemprop='name'>2.对象及变量的并发访问</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>2.1同步</span><meta itemprop='position' content='3' /></li>
+    
+
     
 
     
@@ -425,8 +436,98 @@
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>Blog</h1>
-        
+        <h1>2.1同步</h1>
+        <div class="gdoc-page__anchorwrap">
+    <h2 id="1-单例模式下并发访问同一个对象的内容">
+        1. 单例模式下并发访问同一个对象的内容
+        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.1%E5%90%8C%E6%AD%A5/#1-单例模式下并发访问同一个对象的内容" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 1. 单例模式下并发访问同一个对象的内容" href="#1-%e5%8d%95%e4%be%8b%e6%a8%a1%e5%bc%8f%e4%b8%8b%e5%b9%b6%e5%8f%91%e8%ae%bf%e9%97%ae%e5%90%8c%e4%b8%80%e4%b8%aa%e5%af%b9%e8%b1%a1%e7%9a%84%e5%86%85%e5%ae%b9">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>synchnized 同步锁，使得调用方法变成<strong>同步访问对象属性</strong>。</p>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="2多个对象多把锁">
+        2.多个对象多把锁
+        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.1%E5%90%8C%E6%AD%A5/#2多个对象多把锁" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 2.多个对象多把锁" href="#2%e5%a4%9a%e4%b8%aa%e5%af%b9%e8%b1%a1%e5%a4%9a%e6%8a%8a%e9%94%81">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>方法带有 synchronized 则一个对象带有一把锁，多个对象在 JVM 中是异步的，所以多个对象的多把锁表现为异步的。</p>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="3-脏读">
+        3. 脏读
+        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.1%E5%90%8C%E6%AD%A5/#3-脏读" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 3. 脏读" href="#3-%e8%84%8f%e8%af%bb">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>setValue() 时，中途进行 getValue() ，如果 getValue() 没有同步则可能出现脏读。</p>
+<p>同步锁作用于对象，非同步方法可以异步调用，同一对象的多个同步方法是同步调用。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyObject</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">userName</span> <span class="o">=</span> <span class="s">&#34;A&#34;</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">password</span> <span class="o">=</span> <span class="s">&#34;AA&#34;</span><span class="o">;</span>
+    <span class="kd">synchronized</span> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setValue</span><span class="o">(</span><span class="n">String</span> <span class="n">userName</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">userName</span> <span class="o">=</span> <span class="n">userName</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">3000</span><span class="o">);</span><span class="c1">//delay cause the dirtyRead
+</span><span class="c1"></span>        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">password</span> <span class="o">=</span> <span class="n">password</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">getValue</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">userName</span> <span class="o">+</span> <span class="s">&#34;,&#34;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">password</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>getValue() 加上同步之后不会有脏读</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyObject</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">userName</span> <span class="o">=</span> <span class="s">&#34;A&#34;</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">String</span> <span class="n">password</span> <span class="o">=</span> <span class="s">&#34;AA&#34;</span><span class="o">;</span>
+    <span class="kd">synchronized</span> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setValue</span><span class="o">(</span><span class="n">String</span> <span class="n">userName</span><span class="o">,</span> <span class="n">String</span> <span class="n">password</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">userName</span> <span class="o">=</span> <span class="n">userName</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">3000</span><span class="o">);</span><span class="c1">//delay cause the dirtyRead
+</span><span class="c1"></span>        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">password</span> <span class="o">=</span> <span class="n">password</span><span class="o">;</span>
+    <span class="o">}</span>
+	<span class="c1">//Add synchronized
+</span><span class="c1"></span>    <span class="kd">synchronized</span> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">getValue</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">userName</span> <span class="o">+</span> <span class="s">&#34;,&#34;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">password</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div><div class="gdoc-page__anchorwrap">
+    <h2 id="4-synchronized-锁的重入">
+        4. synchronized 锁的重入
+        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.1%E5%90%8C%E6%AD%A5/#4-synchronized-锁的重入" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 4. synchronized 锁的重入" href="#4-synchronized-%e9%94%81%e7%9a%84%e9%87%8d%e5%85%a5">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>一个线程获得某个对象的锁，对象锁未释放时还想<strong>再次获得锁</strong>，是可以的。</p>
+<p>如果锁不可重入，会造成死锁。</p>
+<p><strong>子类可以通过“可重入锁”调用父类的同步方法。</strong></p>
+<p>当前线程出现<strong>异常</strong>时，锁自动释放。</p>
+<p>同步不具有继承性。</p>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="5-synchronized-的弊端">
+        5. synchronized 的弊端
+        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.1%E5%90%8C%E6%AD%A5/#5-synchronized-的弊端" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 5. synchronized 的弊端" href="#5-synchronized-%e7%9a%84%e5%bc%8a%e7%ab%af">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>若 A 线程执行任务花的时间较长，那么 B 线程会等待较长时间。</p>
+<ul>
+<li>
+<p>可以使用<strong>同步块</strong>的方法来解决，同步块也是锁定对象。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">synchronized</span><span class="o">(</span><span class="k">this</span><span class="o">){</span>
+    <span class="k">this</span><span class="o">.</span><span class="na">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">;</span>
+<span class="o">}</span>
+</code></pre></div><p>只同步共用的部分。</p>
+</li>
+</ul>
+
     </article>
 
                 

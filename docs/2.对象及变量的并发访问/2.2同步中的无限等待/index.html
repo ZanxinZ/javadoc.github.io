@@ -10,11 +10,17 @@
 
 
 
-    <meta name="description" content="技术学习笔记">
+    <meta name="description" content="1.静态同步与 synchronized(class)    静态同步锁定的是类。
+  多个对象共用一把锁
+同一个类如果使用常量字符（常量字符串是存放在缓存中）串作为 synchronized(string) 对象监视器，并且对象 A 的同步方法中有死循环，那么其他对象无法调用该同步方法，表现为无限等待（其他线程被锁住）。
+  一个对象一把锁
+使用局部变量的方式可以避免锁住其他线程。
+  2. synchronized 无限等待    因为 synchronized 锁定的是对象，同一个对象的方法同步执行，当一个线程执行某个方法存在死循环时，其他线程会陷入无限等待。如下，thread 与 threadB 共用一个 service 。
+public class Service { synchronized public void service1(){ System.out.println(&#34;service1&#34;); while (true){ System.out.println(&#34;ha&#34;); } } synchronized public void service2(){ System.out.println(&#34;service2&#34;); } } public class MyThread extends Thread{ Service service; public MyThread(Service service){ this.service = service; } @Override public void run(){ super.">
 
 
 
-    <title>Blog | 技术学习笔记</title>
+    <title>2.2同步中的无限等待 | 技术学习笔记</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -35,7 +41,6 @@
 <link rel="preload" href="/custom.css" as="style">
 <link rel="stylesheet" href="/custom.css" media="all">
 
-<link rel="alternate" type="application/rss+xml" href="http://example.org/blog/index.xml" title="技术学习笔记" />
 
 
 <!-- Made with Geekdoc theme https://github.com/thegeeklab/hugo-geekdoc -->
@@ -264,7 +269,7 @@
             
             
                 <span class="flex">
-                    <a href="/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.2%E5%90%8C%E6%AD%A5%E4%B8%AD%E7%9A%84%E6%97%A0%E9%99%90%E7%AD%89%E5%BE%85/" class="gdoc-nav__entry ">
+                    <a href="/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.2%E5%90%8C%E6%AD%A5%E4%B8%AD%E7%9A%84%E6%97%A0%E9%99%90%E7%AD%89%E5%BE%85/" class="gdoc-nav__entry is-active">
                         2.2同步中的无限等待
                     </a>
                 </span>
@@ -412,7 +417,15 @@
         
     
     
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>Blog</span><meta itemprop='position' content='2' /></li>
+        
+        
+        
+        
+    
+    
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/' href='/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/'><span itemprop='name'>2.对象及变量的并发访问</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>2.2同步中的无限等待</span><meta itemprop='position' content='3' /></li>
+    
+
     
 
     
@@ -425,8 +438,146 @@
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>Blog</h1>
-        
+        <h1>2.2同步中的无限等待</h1>
+        <div class="gdoc-page__anchorwrap">
+    <h2 id="1静态同步与-synchronizedclass">
+        1.静态同步与 synchronized(class)
+        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.2%E5%90%8C%E6%AD%A5%E4%B8%AD%E7%9A%84%E6%97%A0%E9%99%90%E7%AD%89%E5%BE%85/#1静态同步与-synchronizedclass" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 1.静态同步与 synchronized(class)" href="#1%e9%9d%99%e6%80%81%e5%90%8c%e6%ad%a5%e4%b8%8e-synchronizedclass">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p><strong>静态同步锁定的是类。</strong></p>
+<ul>
+<li>
+<p>多个对象共用一把锁</p>
+<p>同一个类如果使用常量字符（常量字符串是存放在缓存中）串作为 synchronized(string) 对象监视器，并且对象 A 的同步方法中有死循环，那么其他对象无法调用该同步方法，表现为无限等待（<strong>其他线程被锁住</strong>）。</p>
+</li>
+<li>
+<p>一个对象一把锁</p>
+<p>使用局部变量的方式可以避免锁住其他线程。</p>
+</li>
+</ul>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="2-synchronized-无限等待">
+        2. synchronized 无限等待
+        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.2%E5%90%8C%E6%AD%A5%E4%B8%AD%E7%9A%84%E6%97%A0%E9%99%90%E7%AD%89%E5%BE%85/#2-synchronized-无限等待" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 2. synchronized 无限等待" href="#2-synchronized-%e6%97%a0%e9%99%90%e7%ad%89%e5%be%85">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>因为 synchronized 锁定的是对象，同一个对象的方法同步执行，当一个线程<strong>执行某个方法存在死循环时</strong>，其他线程会陷入无限等待。如下，thread 与 threadB 共用一个 service 。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Service</span> <span class="o">{</span>
+    <span class="kd">synchronized</span> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service1</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;service1&#34;</span><span class="o">);</span>
+        <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;ha&#34;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">synchronized</span> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service2</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;service2&#34;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">MyThread</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">service1</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThreadB</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">MyThreadB</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">service2</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Service</span> <span class="n">service</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Service</span><span class="o">();</span><span class="c1">//two threads use the same service. 
+</span><span class="c1"></span>        <span class="n">MyThread</span> <span class="n">myThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
+        <span class="n">myThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">MyThreadB</span> <span class="n">myThreadB</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThreadB</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
+        <span class="n">myThreadB</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>解决方法：同步块并且对象监视器使用不同对象。一个方法对应一个对象监视器，做到单个方法的同步（锁住单个方法）。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Service</span> <span class="o">{</span>
+    <span class="n">Object</span> <span class="n">object</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service1</span><span class="o">(){</span>
+        <span class="kd">synchronized</span><span class="o">(</span><span class="n">object</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;service1&#34;</span><span class="o">);</span>
+            <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;ha&#34;</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="n">Object</span> <span class="n">object1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service2</span><span class="o">(){</span>
+        <span class="kd">synchronized</span> <span class="o">(</span><span class="n">object1</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;service2&#34;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><div class="gdoc-page__anchorwrap">
+    <h2 id="3-多线程死锁">
+        3. 多线程死锁
+        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.2%E5%90%8C%E6%AD%A5%E4%B8%AD%E7%9A%84%E6%97%A0%E9%99%90%E7%AD%89%E5%BE%85/#3-多线程死锁" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 3. 多线程死锁" href="#3-%e5%a4%9a%e7%ba%bf%e7%a8%8b%e6%ad%bb%e9%94%81">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>死锁条件：</p>
+<ul>
+<li>互斥(一份资源同时只能供一个线程使用)</li>
+<li>占有且等待</li>
+<li>不可抢占</li>
+<li>循环等待</li>
+</ul>
+<p>以下举例了 4 秒钟的死锁，线程占有的时间越长，死锁时间越长。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DealThread</span> <span class="kd">implements</span> <span class="n">Runnable</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="n">username</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="n">lock1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="n">lock2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setFlag</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">username</span> <span class="o">=</span> <span class="n">username</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">username</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;a&#34;</span><span class="o">)){</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">lock1</span><span class="o">){</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;username: &#34;</span> <span class="o">+</span> <span class="n">username</span><span class="o">);</span>
+                <span class="k">try</span><span class="o">{</span>
+                    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">4000</span><span class="o">);</span><span class="c1">//4 second dead lock
+</span><span class="c1"></span>                <span class="o">}</span><span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">lock2</span><span class="o">){</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;lock2 username: &#34;</span>  <span class="o">+</span> <span class="n">username</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">username</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;b&#34;</span><span class="o">)){</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">lock2</span><span class="o">){</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;username: &#34;</span> <span class="o">+</span> <span class="n">username</span><span class="o">);</span>
+                <span class="k">try</span><span class="o">{</span>
+                    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">4000</span><span class="o">);</span><span class="c1">//4 second dead lock
+</span><span class="c1"></span>                <span class="o">}</span><span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">lock1</span><span class="o">){</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;lock1 username: &#34;</span>  <span class="o">+</span> <span class="n">username</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</code></pre></div>
     </article>
 
                 

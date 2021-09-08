@@ -10,11 +10,20 @@
 
 
 
-    <meta name="description" content="技术学习笔记">
+    <meta name="description" content="1. volatile 关键字    为了实现变量在多个线程间可见。使得线程从公共堆栈中获取变量，而不是线程私有数据栈。
+JVM 在 -sever 模式时为了线程运行效率，线程一直在私有堆栈中获取变量值，而主线程的变量是存储在公共堆栈中，解决这种可见性问题，可以使用 volatile 。
+volatile 与 synchronized 的比较：
+  volatile 保证可见性但不保证原子性（致命缺点），synchronized 保证原子性但不保证可见性。
+  volatile 只能修饰变量。
+  volatile 不发生阻塞，synchronized 会阻塞。
+  2. 原子类    多线程使用原子操作访问共享资源时，不需要锁也可保证线程安全（多线程访问同一资源时，不会出现脏读或写失败）。
+以下代码，多个线程竞争地访问同一个对象中的 count ， 使用原子操作保证了线程安全。
+  CountService.java
+public class CountService extends Thread{ private AtomicInteger count = new AtomicInteger(0);//原子类  @Override public void run(){ for (int i = 0; i &lt; 1000; i&#43;&#43;){ System.">
 
 
 
-    <title>Blog | 技术学习笔记</title>
+    <title>2.3其它方法 | 技术学习笔记</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -35,7 +44,6 @@
 <link rel="preload" href="/custom.css" as="style">
 <link rel="stylesheet" href="/custom.css" media="all">
 
-<link rel="alternate" type="application/rss+xml" href="http://example.org/blog/index.xml" title="技术学习笔记" />
 
 
 <!-- Made with Geekdoc theme https://github.com/thegeeklab/hugo-geekdoc -->
@@ -288,7 +296,7 @@
             
             
                 <span class="flex">
-                    <a href="/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.3%E5%85%B6%E5%AE%83%E6%96%B9%E6%B3%95/" class="gdoc-nav__entry ">
+                    <a href="/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.3%E5%85%B6%E5%AE%83%E6%96%B9%E6%B3%95/" class="gdoc-nav__entry is-active">
                         2.3其它方法
                     </a>
                 </span>
@@ -412,7 +420,15 @@
         
     
     
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>Blog</span><meta itemprop='position' content='2' /></li>
+        
+        
+        
+        
+    
+    
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/' href='/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/'><span itemprop='name'>2.对象及变量的并发访问</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>2.3其它方法</span><meta itemprop='position' content='3' /></li>
+    
+
     
 
     
@@ -425,8 +441,70 @@
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>Blog</h1>
-        
+        <h1>2.3其它方法</h1>
+        <div class="gdoc-page__anchorwrap">
+    <h2 id="1-volatile-关键字">
+        1. volatile 关键字
+        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.3%E5%85%B6%E5%AE%83%E6%96%B9%E6%B3%95/#1-volatile-关键字" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 1. volatile 关键字" href="#1-volatile-%e5%85%b3%e9%94%ae%e5%ad%97">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>为了实现变量在多个线程间可见。使得线程从公共堆栈中获取变量，而不是线程私有数据栈。</p>
+<p>JVM 在 -sever 模式时为了线程运行效率，<strong>线程一直在私有堆栈中获取变量值</strong>，而主线程的变量是存储在公共堆栈中，解决这种可见性问题，可以使用 volatile 。</p>
+<p>volatile 与 synchronized 的比较：</p>
+<ul>
+<li>
+<p>volatile 保证<strong>可见性</strong>但<strong>不保证原子性</strong>（致命缺点），synchronized 保证原子性但不保证可见性。</p>
+</li>
+<li>
+<p>volatile 只能修饰变量。</p>
+</li>
+<li>
+<p>volatile 不发生阻塞，synchronized 会阻塞。</p>
+</li>
+</ul>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="2-原子类">
+        2. 原子类
+        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.3%E5%85%B6%E5%AE%83%E6%96%B9%E6%B3%95/#2-原子类" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 2. 原子类" href="#2-%e5%8e%9f%e5%ad%90%e7%b1%bb">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>多线程使用<strong>原子操作</strong>访问共享资源时，不需要锁也可保证<strong>线程安全</strong>（多线程访问同一资源时，不会出现脏读或写失败）。</p>
+<p>以下代码，多个线程竞争地访问同一个对象中的 count ， 使用原子操作保证了线程安全。</p>
+<ul>
+<li>
+<p>CountService.java</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CountService</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="n">AtomicInteger</span> <span class="n">count</span> <span class="o">=</span> <span class="k">new</span> <span class="n">AtomicInteger</span><span class="o">(</span><span class="n">0</span><span class="o">);</span><span class="c1">//原子类
+</span><span class="c1"></span>    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">1000</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;:&#34;</span> <span class="o">+</span><span class="n">count</span><span class="o">.</span><span class="na">incrementAndGet</span><span class="o">());</span><span class="c1">//incrementAndGet 方法是原子操作
+</span><span class="c1"></span>        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></li>
+<li>
+<p>Run.java</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">CountService</span> <span class="n">countService</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CountService</span><span class="o">();</span>
+        <span class="n">Thread</span> <span class="n">t1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">countService</span><span class="o">);</span>
+        <span class="n">t1</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;t1&#34;</span><span class="o">);</span>
+        <span class="n">t1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">Thread</span> <span class="n">t2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">countService</span><span class="o">);</span>
+        <span class="n">t2</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;t2&#34;</span><span class="o">);</span>
+        <span class="n">t2</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">Thread</span> <span class="n">t3</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">countService</span><span class="o">);</span>
+        <span class="n">t3</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;t3&#34;</span><span class="o">);</span>
+        <span class="n">t3</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></li>
+</ul>
+<p><strong>方法间的调用不是原子的</strong>（调用多个原子操作，不具有原子性，线程间会出现抢占），需要使用 synchronized 来保证线程安全。</p>
+
     </article>
 
                 

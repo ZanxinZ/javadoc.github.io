@@ -81,6 +81,9 @@ draft: true
   
   这是 hint 
   {{</hint>}}
+
+- 导航栏
+  - 目录只允许在 content 下多加一层。
   
 
 ## 在学校
