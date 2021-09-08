@@ -1,12 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>简介 on 技术学习心得</title>
+    <title>简介 on 技术学习笔记</title>
     <link>http://example.org/</link>
-    <description>Recent content in 简介 on 技术学习心得</description>
+    <description>Recent content in 简介 on 技术学习笔记</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 08 Sep 2021 00:44:56 +0800</lastBuildDate><atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Life</title>
+      <link>http://example.org/blog/life/</link>
+      <pubDate>Wed, 08 Sep 2021 18:37:17 +0800</pubDate>
+      
+      <guid>http://example.org/blog/life/</guid>
+      <description>在学校    </description>
+    </item>
+    
     <item>
       <title>Start()与run()的区别</title>
       <link>http://example.org/%E7%BA%BF%E7%A8%8B%E6%96%B0%E5%BB%BA/start%E4%B8%8Erun%E7%9A%84%E5%8C%BA%E5%88%AB/</link>

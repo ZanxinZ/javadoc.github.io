@@ -1,5 +1,5 @@
 baseURL = 'http://example.org/'
 languageCode = 'en-us'
-title = '技术学习心得'
+title = '技术学习笔记'
 theme = "hugo-geekdoc"
 publishdir = "./docs/"
