@@ -13,7 +13,7 @@
       <pubDate>Wed, 08 Sep 2021 18:37:17 +0800</pubDate>
       
       <guid>http://example.org/blog/life/</guid>
-      <description>在学校    </description>
+      <description>关于 Hugo GeekDoc     GitHub 先新建一个仓库，并配置 Github Pages。 下载 geekdoc 的 release，放到 theme 文件夹下。 配置config.toml baseURL = &amp;#39;http://example.org/&amp;#39; languageCode = &amp;#39;en-us&amp;#39; title = &amp;#39;技术学习笔记&amp;#39; theme = &amp;#34;hugo-geekdoc&amp;#34; # Match the github rule. publishdir = &amp;#34;./docs/&amp;#34; pluralizeListTitles = false # Geekdoc required configuration pygmentsUseClasses = true pygmentsCodeFences = true disablePathToLower = true # Needed for mermaid shortcodes [markup] [markup.goldmark.renderer] # Needed for mermaid shortcode unsafe = true [markup.tableOfContents] startLevel = 1 endLevel = 9 [taxonomies] tag = &amp;#34;tags&amp;#34;  开始写文章 hugo new blog/life.</description>
     </item>
     
   </channel>
