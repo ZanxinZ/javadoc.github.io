@@ -10,11 +10,13 @@
 
 
 
-    <meta name="description" content="技术学习笔记">
+    <meta name="description" content="以 Thread 实例的方式    Mythread.java
+package threadTest; public class MyThread extends Thread{ @Override public void run(){ super.run(); for (int i = 0; i &lt; 100; i&#43;&#43;){ System.out.println(&#34;MyThread:&#34; &#43; i); } } } Main.java
+package threadTest; public class main { public static void main(String[] args){ MyThread myThread = new MyThread(); myThread.start(); MyThread myThread1 = new MyThread(); myThread1.start(); System.out.println(&#34;Has been ran&#34;); } } 以包装 Runnable 的方式    因为 Runnable 接口中只有 run 方法，无法启动一个新的线程。所以借由 Thread 的构造，可以新建线程。">
 
 
 
-    <title>Blog | 技术学习笔记</title>
+    <title>1.1线程新建 | 技术学习笔记</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -35,7 +37,6 @@
 <link rel="preload" href="/custom.css" as="style">
 <link rel="stylesheet" href="/custom.css" media="all">
 
-<link rel="alternate" type="application/rss+xml" href="http://example.org/blog/index.xml" title="技术学习笔记" />
 
 
 <!-- Made with Geekdoc theme https://github.com/thegeeklab/hugo-geekdoc -->
@@ -158,7 +159,7 @@
             
             
                 <span class="flex">
-                    <a href="/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/1.1%E6%96%B0%E5%BB%BA%E7%BA%BF%E7%A8%8B/" class="gdoc-nav__entry ">
+                    <a href="/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/1.1%E6%96%B0%E5%BB%BA%E7%BA%BF%E7%A8%8B/" class="gdoc-nav__entry is-active">
                         1.1线程新建
                     </a>
                 </span>
@@ -412,7 +413,15 @@
         
     
     
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>Blog</span><meta itemprop='position' content='2' /></li>
+        
+        
+        
+        
+    
+    
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/' href='/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/'><span itemprop='name'>1.多线程的使用</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>1.1线程新建</span><meta itemprop='position' content='3' /></li>
+    
+
     
 
     
@@ -425,8 +434,82 @@
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>Blog</h1>
-        
+        <h1>1.1线程新建</h1>
+        <div class="gdoc-page__anchorwrap">
+    <h2 id="以-thread-实例的方式">
+        以 Thread 实例的方式
+        <a data-clipboard-text="http://example.org/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/1.1%E6%96%B0%E5%BB%BA%E7%BA%BF%E7%A8%8B/#以-thread-实例的方式" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 以 Thread 实例的方式" href="#%e4%bb%a5-thread-%e5%ae%9e%e4%be%8b%e7%9a%84%e6%96%b9%e5%bc%8f">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>Mythread.java</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">threadTest</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="kd">super</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">100</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;MyThread:&#34;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>Main.java</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">threadTest</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">main</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="n">MyThread</span> <span class="n">myThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">();</span>
+        <span class="n">myThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">MyThread</span> <span class="n">myThread1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">();</span>
+        <span class="n">myThread1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Has been ran&#34;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><div class="gdoc-page__anchorwrap">
+    <h2 id="以包装-runnable-的方式">
+        以包装 Runnable 的方式
+        <a data-clipboard-text="http://example.org/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/1.1%E6%96%B0%E5%BB%BA%E7%BA%BF%E7%A8%8B/#以包装-runnable-的方式" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 以包装 Runnable 的方式" href="#%e4%bb%a5%e5%8c%85%e8%a3%85-runnable-%e7%9a%84%e6%96%b9%e5%bc%8f">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>因为 Runnable 接口中只有 run 方法，无法启动一个新的线程。所以借由 Thread 的构造，可以新建线程。</p>
+<p>Runnable.java</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">threadTest</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyRunnable</span> <span class="kd">implements</span> <span class="n">Runnable</span><span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Runnable&#34;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>Run.java</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">threadTest</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Runnable</span> <span class="n">runnable</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyRunnable</span><span class="o">();</span>
+        <span class="n">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">runnable</span><span class="o">);</span>   <span class="c1">//runnable has no &#39;start&#39; method, so use thread to decorate(compact).
+</span><span class="c1"></span>        <span class="n">thread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;done&#34;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><div class="gdoc-page__anchorwrap">
+    <h2 id="start-与-run-的区别">
+        start() 与 run() 的区别
+        <a data-clipboard-text="http://example.org/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/1.1%E6%96%B0%E5%BB%BA%E7%BA%BF%E7%A8%8B/#start-与-run-的区别" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor start() 与 run() 的区别" href="#start-%e4%b8%8e-run-%e7%9a%84%e5%8c%ba%e5%88%ab">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><ul>
+<li>
+<p>调用 start() 是通知<strong>线程规划器</strong>，目标线程已经准备好了，线程规划器可以安排一个时间来启动目标线程，属于异步执行。</p>
+</li>
+<li>
+<p>调用 run() 时，是直接执行对应的目标线程的代码段，执行完 run() 中的代码才会继续下一步，属于同步执行。</p>
+</li>
+</ul>
+
     </article>
 
                 
