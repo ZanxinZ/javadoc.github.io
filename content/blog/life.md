@@ -3,6 +3,85 @@ title: "Life"
 date: 2021-09-08T18:37:17+08:00
 draft: true
 ---
+## 关于 Hugo GeekDoc
+
+- GitHub 先新建一个仓库，并配置 Github Pages。
+- 下载 geekdoc 的 **release**，放到 theme 文件夹下。
+- 配置config.toml
+  ```toml
+    baseURL = 'http://example.org/'
+    languageCode = 'en-us'
+    title = '技术学习笔记'
+    theme = "hugo-geekdoc"
+
+    # Match the github rule.
+    publishdir = "./docs/" 
+
+    pluralizeListTitles = false
+
+    # Geekdoc required configuration
+    pygmentsUseClasses = true
+    pygmentsCodeFences = true
+    disablePathToLower = true
+
+    # Needed for mermaid shortcodes
+    [markup]
+    [markup.goldmark.renderer]
+        # Needed for mermaid shortcode
+        unsafe = true
+    [markup.tableOfContents]
+        startLevel = 1
+        endLevel = 9
+
+    [taxonomies]
+    tag = "tags"
+   
+  ```
+- 开始写文章
+  ```cmd
+  hugo new blog/life.md
+  ```
+- 测试
+  ```cmd
+  hugo server -D
+  ```
+- 生成 HTML
+  ```cmd
+  hugo -D
+  ```
+
+## Hugo 使用方法
+- 提示板
+  {{<hint ok>}}
+  提示板
+
+  这是 hint ok
+  {{</hint>}}
+
+  {{<hint info>}}
+  提示板
+
+  这是 hint info
+  {{</hint>}}
+
+  {{<hint warning>}}
+  提示板
+  
+  这是 hint warn
+  {{</hint>}}
+
+  {{<hint danger>}}
+  提示板
+  
+  这是 hint danger
+  {{</hint>}}
+
+  {{<hint >}}
+  提示板
+  
+  这是 hint 
+  {{</hint>}}
+  
 
 ## 在学校
 
