@@ -2,7 +2,6 @@
 <html lang="en" class="color-toggle-hidden">
 
 <head>
-	<meta name="generator" content="Hugo 0.88.1" />
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light dark" />
@@ -11,11 +10,13 @@
 
 
 
-    <meta name="description" content="关于 Blog：学习心得的记录、学习笔记。    ">
+    <meta name="description" content="Mythread.java
+package threadTest; public class MyThread extends Thread{ @Override public void run(){ super.run(); for (int i = 0; i &lt; 100; i&#43;&#43;){ System.out.println(&#34;MyThread:&#34; &#43; i); } } } Main.java
+package threadTest; public class main { public static void main(String[] args){ MyThread myThread = new MyThread(); myThread.start(); MyThread myThread1 = new MyThread(); myThread1.start(); System.out.println(&#34;Has been ran&#34;); } } ">
 
 
 
-    <title>技术学习心得</title>
+    <title>Thread方式 | 技术学习心得</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -36,7 +37,6 @@
 <link rel="preload" href="/custom.css" as="style">
 <link rel="stylesheet" href="/custom.css" media="all">
 
-<link rel="alternate" type="application/rss+xml" href="http://example.org/index.xml" title="技术学习心得" />
 
 
 <!-- Made with Geekdoc theme https://github.com/thegeeklab/hugo-geekdoc -->
@@ -207,7 +207,7 @@
             
             
                 <span class="flex">
-                    <a href="/%E7%BA%BF%E7%A8%8B%E6%96%B0%E5%BB%BA/thread%E6%96%B9%E5%BC%8F/" class="gdoc-nav__entry ">
+                    <a href="/%E7%BA%BF%E7%A8%8B%E6%96%B0%E5%BB%BA/thread%E6%96%B9%E5%BC%8F/" class="gdoc-nav__entry is-active">
                         Thread方式
                     </a>
                 </span>
@@ -271,7 +271,23 @@
             
     
     
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>简介</span><meta itemprop='position' content='1' /></li>
+        
+        
+        
+        
+    
+    
+        
+        
+        
+        
+    
+    
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/%E7%BA%BF%E7%A8%8B%E6%96%B0%E5%BB%BA/' href='/%E7%BA%BF%E7%A8%8B%E6%96%B0%E5%BB%BA/'><span itemprop='name'>线程新建s</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>Thread方式</span><meta itemprop='position' content='3' /></li>
+    
+
+    
+
     
 
         </ol>
@@ -282,15 +298,32 @@
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>简介</h1>
-        <div class="gdoc-page__anchorwrap">
-    <h2 id="关于-blog学习心得的记录学习笔记">
-        关于 Blog：学习心得的记录、学习笔记。
-        <a data-clipboard-text="http://example.org/#关于-blog学习心得的记录学习笔记" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 关于 Blog：学习心得的记录、学习笔记。" href="#%e5%85%b3%e4%ba%8e-blog%e5%ad%a6%e4%b9%a0%e5%bf%83%e5%be%97%e7%9a%84%e8%ae%b0%e5%bd%95%e5%ad%a6%e4%b9%a0%e7%ac%94%e8%ae%b0">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div>
+        <h1>Thread方式</h1>
+        <p>Mythread.java</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> threadTest<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MyThread</span> <span style="color:#66d9ef">extends</span> Thread<span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">(){</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 100<span style="color:#f92672">;</span> i<span style="color:#f92672">++){</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;MyThread:&#34;</span> <span style="color:#f92672">+</span> i<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>Main.java</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> threadTest<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">main</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">){</span>
+        MyThread myThread <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MyThread<span style="color:#f92672">();</span>
+        myThread<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+        MyThread myThread1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MyThread<span style="color:#f92672">();</span>
+        myThread1<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Has been ran&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
     </article>
 
                 
