@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>3.线程间通信 on 技术学习笔记</title>
+    <link>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/</link>
+    <description>Recent content in 3.线程间通信 on 技术学习笔记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 09 Sep 2021 18:28:48 +0800</lastBuildDate><atom:link href="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>等待与通知机制</title>
+      <link>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%AD%89%E5%BE%85%E4%B8%8E%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6/</link>
+      <pubDate>Thu, 09 Sep 2021 20:03:54 +0800</pubDate>
+      
+      <guid>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%AD%89%E5%BE%85%E4%B8%8E%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6/</guid>
+      <description>while 轮询存在缺陷      A 线程执行每一步的时间较长。
+public class ThreadA extends Thread{ private MyList list; public ThreadA(MyList list){ super(); this.list = list; } @Override public void run(){ super.run(); try{ for (int i = 0; i &amp;lt; 10; i++) { list.add(); System.out.println(Thread.currentThread().getName() + &amp;#34; Add &amp;#34; + i); Thread.sleep(1000); } }catch (InterruptedException e){ e.printStackTrace(); } } }   B线程执行轮询的时间较短
+public class ThreadB extends Thread{ private MyList list; public ThreadB(MyList list){ super(); this.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -10,11 +10,13 @@
 
 
 
-    <meta name="description" content="关于 Hugo GeekDoc     GitHub 先新建一个仓库，并配置 Github Pages。 下载 geekdoc 的 release，放到 theme 文件夹下。 配置config.toml baseURL = &#39;http://example.org/&#39; languageCode = &#39;en-us&#39; title = &#39;技术学习笔记&#39; theme = &#34;hugo-geekdoc&#34; # Match the github rule. publishdir = &#34;./docs/&#34; pluralizeListTitles = false # Geekdoc required configuration pygmentsUseClasses = true pygmentsCodeFences = true disablePathToLower = true # Needed for mermaid shortcodes [markup] [markup.goldmark.renderer] # Needed for mermaid shortcode unsafe = true [markup.tableOfContents] startLevel = 1 endLevel = 9 [taxonomies] tag = &#34;tags&#34;  开始写文章 hugo new blog/life.">
+    <meta name="description" content="while 轮询存在缺陷      A 线程执行每一步的时间较长。
+public class ThreadA extends Thread{ private MyList list; public ThreadA(MyList list){ super(); this.list = list; } @Override public void run(){ super.run(); try{ for (int i = 0; i &lt; 10; i&#43;&#43;) { list.add(); System.out.println(Thread.currentThread().getName() &#43; &#34; Add &#34; &#43; i); Thread.sleep(1000); } }catch (InterruptedException e){ e.printStackTrace(); } } }   B线程执行轮询的时间较短
+public class ThreadB extends Thread{ private MyList list; public ThreadB(MyList list){ super(); this.">
 
 
 
-    <title>Life | 技术学习笔记</title>
+    <title>等待与通知机制 | 技术学习笔记</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -345,7 +347,7 @@
             
             
                 <span class="flex">
-                    <a href="/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%AD%89%E5%BE%85%E4%B8%8E%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6/" class="gdoc-nav__entry ">
+                    <a href="/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%AD%89%E5%BE%85%E4%B8%8E%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6/" class="gdoc-nav__entry is-active">
                         等待与通知机制
                     </a>
                 </span>
@@ -399,7 +401,7 @@
             
             
                 <span class="flex">
-                    <a href="/blog/life/" class="gdoc-nav__entry is-active">
+                    <a href="/blog/life/" class="gdoc-nav__entry ">
                         Life
                     </a>
                 </span>
@@ -475,7 +477,7 @@
         
     
     
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/blog/' href='/blog/'><span itemprop='name'>Blog</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>Life</span><meta itemprop='position' content='3' /></li>
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/' href='/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/'><span itemprop='name'>3.线程间通信</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>等待与通知机制</span><meta itemprop='position' content='3' /></li>
     
 
     
@@ -490,130 +492,73 @@
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>Life</h1>
+        <h1>等待与通知机制</h1>
         <div class="gdoc-page__anchorwrap">
-    <h2 id="关于-hugo-geekdoc">
-        关于 Hugo GeekDoc
-        <a data-clipboard-text="http://example.org/blog/life/#关于-hugo-geekdoc" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 关于 Hugo GeekDoc" href="#%e5%85%b3%e4%ba%8e-hugo-geekdoc">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><ul>
-<li>GitHub 先新建一个仓库，并配置 Github Pages。</li>
-<li>下载 geekdoc 的 <strong>release</strong>，放到 theme 文件夹下。</li>
-<li>配置config.toml
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml">  <span class="nx">baseURL</span> <span class="p">=</span> <span class="s1">&#39;http://example.org/&#39;</span>
-  <span class="nx">languageCode</span> <span class="p">=</span> <span class="s1">&#39;en-us&#39;</span>
-  <span class="nx">title</span> <span class="p">=</span> <span class="s1">&#39;技术学习笔记&#39;</span>
-  <span class="nx">theme</span> <span class="p">=</span> <span class="s2">&#34;hugo-geekdoc&#34;</span>
-
-  <span class="c"># Match the github rule.</span>
-  <span class="nx">publishdir</span> <span class="p">=</span> <span class="s2">&#34;./docs/&#34;</span> 
-
-  <span class="nx">pluralizeListTitles</span> <span class="p">=</span> <span class="kc">false</span>
-
-  <span class="c"># Geekdoc required configuration</span>
-  <span class="nx">pygmentsUseClasses</span> <span class="p">=</span> <span class="kc">true</span>
-  <span class="nx">pygmentsCodeFences</span> <span class="p">=</span> <span class="kc">true</span>
-  <span class="nx">disablePathToLower</span> <span class="p">=</span> <span class="kc">true</span>
-
-  <span class="c"># Needed for mermaid shortcodes</span>
-  <span class="p">[</span><span class="nx">markup</span><span class="p">]</span>
-  <span class="p">[</span><span class="nx">markup</span><span class="p">.</span><span class="nx">goldmark</span><span class="p">.</span><span class="nx">renderer</span><span class="p">]</span>
-      <span class="c"># Needed for mermaid shortcode</span>
-      <span class="nx">unsafe</span> <span class="p">=</span> <span class="kc">true</span>
-  <span class="p">[</span><span class="nx">markup</span><span class="p">.</span><span class="nx">tableOfContents</span><span class="p">]</span>
-      <span class="nx">startLevel</span> <span class="p">=</span> <span class="mi">1</span>
-      <span class="nx">endLevel</span> <span class="p">=</span> <span class="mi">9</span>
-
-  <span class="p">[</span><span class="nx">taxonomies</span><span class="p">]</span>
-  <span class="nx">tag</span> <span class="p">=</span> <span class="s2">&#34;tags&#34;</span>
-
-</code></pre></div></li>
-<li>开始写文章
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd">hugo new blog/life.md
-</code></pre></div></li>
-<li>测试
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd">hugo server -D
-</code></pre></div></li>
-<li>生成 HTML
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd">hugo -D
-</code></pre></div></li>
-</ul>
-<div class="gdoc-page__anchorwrap">
-    <h2 id="hugo-使用方法">
-        Hugo 使用方法
-        <a data-clipboard-text="http://example.org/blog/life/#hugo-使用方法" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor Hugo 使用方法" href="#hugo-%e4%bd%bf%e7%94%a8%e6%96%b9%e6%b3%95">
+    <h2 id="while-轮询存在缺陷">
+        while 轮询存在缺陷
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%AD%89%E5%BE%85%E4%B8%8E%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6/#while-轮询存在缺陷" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor while 轮询存在缺陷" href="#while-%e8%bd%ae%e8%af%a2%e5%ad%98%e5%9c%a8%e7%bc%ba%e9%99%b7">
             <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
         </a>
     </h2>
 </div><ul>
 <li>
-<p>提示板
-<blockquote class="gdoc-hint ok">
-  <p>提示板</p>
-<p>这是 hint ok</p>
+<p>A 线程执行每一步的时间较长。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadA</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+        <span class="kd">private</span> <span class="n">MyList</span> <span class="n">list</span><span class="o">;</span>
 
-</blockquote>
-</p>
-<blockquote class="gdoc-hint info">
-  <p>提示板</p>
-<p>这是 hint info</p>
+        <span class="kd">public</span> <span class="nf">ThreadA</span><span class="o">(</span><span class="n">MyList</span> <span class="n">list</span><span class="o">){</span>
+            <span class="kd">super</span><span class="o">();</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">list</span> <span class="o">=</span> <span class="n">list</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+            <span class="kd">super</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
+            <span class="k">try</span><span class="o">{</span>
+                <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">10</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                    <span class="n">list</span><span class="o">.</span><span class="na">add</span><span class="o">();</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; Add &#34;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+                    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">1000</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
 
-</blockquote>
+        <span class="o">}</span>
+    <span class="o">}</span>
 
-<blockquote class="gdoc-hint warning">
-  <p>提示板</p>
-<p>这是 hint warn</p>
-
-</blockquote>
-
-<blockquote class="gdoc-hint danger">
-  <p>提示板</p>
-<p>这是 hint danger</p>
-
-</blockquote>
-
-<blockquote class="gdoc-hint ">
-  <p>提示板</p>
-<p>这是 hint</p>
-
-</blockquote>
-
-</li>
+</code></pre></div></li>
 <li>
-<p>导航栏</p>
-<ul>
-<li>目录只允许在 content 下多加一层。</li>
+<p>B线程执行轮询的时间较短</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">    <span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadB</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+        <span class="kd">private</span> <span class="n">MyList</span> <span class="n">list</span><span class="o">;</span>
+        <span class="kd">public</span> <span class="nf">ThreadB</span><span class="o">(</span><span class="n">MyList</span> <span class="n">list</span><span class="o">){</span>
+            <span class="kd">super</span><span class="o">();</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">list</span> <span class="o">=</span> <span class="n">list</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+            <span class="kd">super</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
+            <span class="k">try</span><span class="o">{</span>
+                <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+                    <span class="k">if</span><span class="o">(</span><span class="n">list</span><span class="o">.</span><span class="na">size</span><span class="o">()</span> <span class="o">&gt;=</span> <span class="n">5</span><span class="o">){</span>
+                        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;B Up to five.&#34;</span><span class="o">);</span>
+                        <span class="k">throw</span> <span class="k">new</span> <span class="n">InterruptedException</span><span class="o">();</span>
+                    <span class="o">}</span>
+                    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">20</span><span class="o">);</span>
+                <span class="o">}</span>
+            <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+
+        <span class="o">}</span>
+    <span class="o">}</span>
+</code></pre></div></li>
 </ul>
-</li>
-</ul>
-<div class="gdoc-page__anchorwrap">
-    <h2 id="在学校">
-        在学校
-        <a data-clipboard-text="http://example.org/blog/life/#在学校" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 在学校" href="#%e5%9c%a8%e5%ad%a6%e6%a0%a1">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><div class="gdoc-page__anchorwrap">
-    <h3 id="研一9月">
-        研一9月
-        <a data-clipboard-text="http://example.org/blog/life/#研一9月" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 研一9月" href="#%e7%a0%94%e4%b8%809%e6%9c%88">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h3>
-</div><ul>
-<li>
-<p>到校占工位啦</p>
-<p>把思昊君赠予的显示器摆上了我的工位，桌板上有个洞和显示器支架的脚刚好契合，可以把显示器竖起来，竖屏即刻体验拉满。
-<img src="/table.jpg" alt="me"  /></p>
-</li>
-<li>
-<p>舍友的 C++ 海报</p>
-<p>C++ 的框架尽显眼前
-<img src="/me.jpg" alt="我与海报"  /></p>
-</li>
-</ul>
+<p><img src="/%e5%a4%9a%e7%ba%bf%e7%a8%8b/3.%e7%ba%bf%e7%a8%8b%e9%80%9a%e4%bf%a1/while%e8%bd%ae%e8%af%a2.png" alt="while轮询"  /></p>
+<p>线程 A 和 执行循环每轮会休息 1s，线程 B 每隔 20ms 对 size 进行访问。而线程 B 的轮询，若时间太长则无法准确捕捉 list.size的变化；若时间太短则耗费大量的 CPU 资源。</p>
+<p>所以，使用 while 来轮询变量或者对象属性，会造成 CPU 资源的浪费；轮询间隔越短，越耗费资源。</p>
+<p>我们使用一种称为 wait/notify 的机制来解决这个问题。</p>
+<p>多线程共享变量，会有<strong>同步</strong>的问题，线程无法确保读取到的变量值是不是最新版本，而 wait/notify机制 恰好可以解决<strong>同步</strong>这个问题。</p>
 
     </article>
 

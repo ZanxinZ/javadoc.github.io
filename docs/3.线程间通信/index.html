@@ -10,11 +10,11 @@
 
 
 
-    <meta name="description" content="关于 Hugo GeekDoc     GitHub 先新建一个仓库，并配置 Github Pages。 下载 geekdoc 的 release，放到 theme 文件夹下。 配置config.toml baseURL = &#39;http://example.org/&#39; languageCode = &#39;en-us&#39; title = &#39;技术学习笔记&#39; theme = &#34;hugo-geekdoc&#34; # Match the github rule. publishdir = &#34;./docs/&#34; pluralizeListTitles = false # Geekdoc required configuration pygmentsUseClasses = true pygmentsCodeFences = true disablePathToLower = true # Needed for mermaid shortcodes [markup] [markup.goldmark.renderer] # Needed for mermaid shortcode unsafe = true [markup.tableOfContents] startLevel = 1 endLevel = 9 [taxonomies] tag = &#34;tags&#34;  开始写文章 hugo new blog/life.">
+    <meta name="description" content=" wait/notify 生产者/消费者模式 join ThreadLocal  ">
 
 
 
-    <title>Life | 技术学习笔记</title>
+    <title>3.线程间通信 | 技术学习笔记</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -35,6 +35,7 @@
 <link rel="preload" href="/custom.css" as="style">
 <link rel="stylesheet" href="/custom.css" media="all">
 
+<link rel="alternate" type="application/rss+xml" href="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/index.xml" title="技术学习笔记" />
 
 
 <!-- Made with Geekdoc theme https://github.com/thegeeklab/hugo-geekdoc -->
@@ -318,7 +319,7 @@
             
             
                 <span class="flex">
-                    <a href="/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" class="gdoc-nav__entry ">
+                    <a href="/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/" class="gdoc-nav__entry is-active">
                         3.线程间通信
                     </a>
                 </span>
@@ -399,7 +400,7 @@
             
             
                 <span class="flex">
-                    <a href="/blog/life/" class="gdoc-nav__entry is-active">
+                    <a href="/blog/life/" class="gdoc-nav__entry ">
                         Life
                     </a>
                 </span>
@@ -469,15 +470,7 @@
         
     
     
-        
-        
-        
-        
-    
-    
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/blog/' href='/blog/'><span itemprop='name'>Blog</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>Life</span><meta itemprop='position' content='3' /></li>
-    
-
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>3.线程间通信</span><meta itemprop='position' content='2' /></li>
     
 
     
@@ -490,129 +483,12 @@
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>Life</h1>
-        <div class="gdoc-page__anchorwrap">
-    <h2 id="关于-hugo-geekdoc">
-        关于 Hugo GeekDoc
-        <a data-clipboard-text="http://example.org/blog/life/#关于-hugo-geekdoc" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 关于 Hugo GeekDoc" href="#%e5%85%b3%e4%ba%8e-hugo-geekdoc">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><ul>
-<li>GitHub 先新建一个仓库，并配置 Github Pages。</li>
-<li>下载 geekdoc 的 <strong>release</strong>，放到 theme 文件夹下。</li>
-<li>配置config.toml
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-toml" data-lang="toml">  <span class="nx">baseURL</span> <span class="p">=</span> <span class="s1">&#39;http://example.org/&#39;</span>
-  <span class="nx">languageCode</span> <span class="p">=</span> <span class="s1">&#39;en-us&#39;</span>
-  <span class="nx">title</span> <span class="p">=</span> <span class="s1">&#39;技术学习笔记&#39;</span>
-  <span class="nx">theme</span> <span class="p">=</span> <span class="s2">&#34;hugo-geekdoc&#34;</span>
-
-  <span class="c"># Match the github rule.</span>
-  <span class="nx">publishdir</span> <span class="p">=</span> <span class="s2">&#34;./docs/&#34;</span> 
-
-  <span class="nx">pluralizeListTitles</span> <span class="p">=</span> <span class="kc">false</span>
-
-  <span class="c"># Geekdoc required configuration</span>
-  <span class="nx">pygmentsUseClasses</span> <span class="p">=</span> <span class="kc">true</span>
-  <span class="nx">pygmentsCodeFences</span> <span class="p">=</span> <span class="kc">true</span>
-  <span class="nx">disablePathToLower</span> <span class="p">=</span> <span class="kc">true</span>
-
-  <span class="c"># Needed for mermaid shortcodes</span>
-  <span class="p">[</span><span class="nx">markup</span><span class="p">]</span>
-  <span class="p">[</span><span class="nx">markup</span><span class="p">.</span><span class="nx">goldmark</span><span class="p">.</span><span class="nx">renderer</span><span class="p">]</span>
-      <span class="c"># Needed for mermaid shortcode</span>
-      <span class="nx">unsafe</span> <span class="p">=</span> <span class="kc">true</span>
-  <span class="p">[</span><span class="nx">markup</span><span class="p">.</span><span class="nx">tableOfContents</span><span class="p">]</span>
-      <span class="nx">startLevel</span> <span class="p">=</span> <span class="mi">1</span>
-      <span class="nx">endLevel</span> <span class="p">=</span> <span class="mi">9</span>
-
-  <span class="p">[</span><span class="nx">taxonomies</span><span class="p">]</span>
-  <span class="nx">tag</span> <span class="p">=</span> <span class="s2">&#34;tags&#34;</span>
-
-</code></pre></div></li>
-<li>开始写文章
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd">hugo new blog/life.md
-</code></pre></div></li>
-<li>测试
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd">hugo server -D
-</code></pre></div></li>
-<li>生成 HTML
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd">hugo -D
-</code></pre></div></li>
-</ul>
-<div class="gdoc-page__anchorwrap">
-    <h2 id="hugo-使用方法">
-        Hugo 使用方法
-        <a data-clipboard-text="http://example.org/blog/life/#hugo-使用方法" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor Hugo 使用方法" href="#hugo-%e4%bd%bf%e7%94%a8%e6%96%b9%e6%b3%95">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><ul>
-<li>
-<p>提示板
-<blockquote class="gdoc-hint ok">
-  <p>提示板</p>
-<p>这是 hint ok</p>
-
-</blockquote>
-</p>
-<blockquote class="gdoc-hint info">
-  <p>提示板</p>
-<p>这是 hint info</p>
-
-</blockquote>
-
-<blockquote class="gdoc-hint warning">
-  <p>提示板</p>
-<p>这是 hint warn</p>
-
-</blockquote>
-
-<blockquote class="gdoc-hint danger">
-  <p>提示板</p>
-<p>这是 hint danger</p>
-
-</blockquote>
-
-<blockquote class="gdoc-hint ">
-  <p>提示板</p>
-<p>这是 hint</p>
-
-</blockquote>
-
-</li>
-<li>
-<p>导航栏</p>
-<ul>
-<li>目录只允许在 content 下多加一层。</li>
-</ul>
-</li>
-</ul>
-<div class="gdoc-page__anchorwrap">
-    <h2 id="在学校">
-        在学校
-        <a data-clipboard-text="http://example.org/blog/life/#在学校" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 在学校" href="#%e5%9c%a8%e5%ad%a6%e6%a0%a1">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><div class="gdoc-page__anchorwrap">
-    <h3 id="研一9月">
-        研一9月
-        <a data-clipboard-text="http://example.org/blog/life/#研一9月" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 研一9月" href="#%e7%a0%94%e4%b8%809%e6%9c%88">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h3>
-</div><ul>
-<li>
-<p>到校占工位啦</p>
-<p>把思昊君赠予的显示器摆上了我的工位，桌板上有个洞和显示器支架的脚刚好契合，可以把显示器竖起来，竖屏即刻体验拉满。
-<img src="/table.jpg" alt="me"  /></p>
-</li>
-<li>
-<p>舍友的 C++ 海报</p>
-<p>C++ 的框架尽显眼前
-<img src="/me.jpg" alt="我与海报"  /></p>
-</li>
+        <h1>3.线程间通信</h1>
+        <ul>
+<li>wait/notify</li>
+<li>生产者/消费者模式</li>
+<li>join</li>
+<li>ThreadLocal</li>
 </ul>
 
     </article>
