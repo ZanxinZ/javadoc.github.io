@@ -38,6 +38,8 @@
     <loc>http://example.org/</loc>
     <lastmod>2021-09-08T00:44:56+08:00</lastmod>
   </url><url>
+    <loc>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F/</loc>
+  </url><url>
     <loc>http://example.org/tags/</loc>
   </url>
 </urlset>
