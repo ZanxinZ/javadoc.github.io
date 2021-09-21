@@ -103,5 +103,14 @@ package threadTest; public class MyThread extends Thread{ @Override public void 
 package threadTest; public class main { public static void main(String[] args){ MyThread myThread = new MyThread(); myThread.start(); MyThread myThread1 = new MyThread(); myThread1.start(); System.out.println(&amp;#34;Has been ran&amp;#34;); } } 以包装 Runnable 的方式    因为 Runnable 接口中只有 run 方法，无法启动一个新的线程。所以借由 Thread 的构造，可以新建线程。</description>
     </item>
     
+    <item>
+      <title></title>
+      <link>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F/</guid>
+      <description>生产者消费者模式    </description>
+    </item>
+    
   </channel>
 </rss>
