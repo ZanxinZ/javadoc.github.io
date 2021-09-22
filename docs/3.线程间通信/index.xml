@@ -8,23 +8,28 @@
     <language>en-us</language>
     <lastBuildDate>Thu, 09 Sep 2021 18:28:48 +0800</lastBuildDate><atom:link href="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>等待与通知机制</title>
-      <link>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%AD%89%E5%BE%85%E4%B8%8E%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6/</link>
-      <pubDate>Thu, 09 Sep 2021 20:03:54 +0800</pubDate>
+      <title>3.2生产者消费者模式</title>
+      <link>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.2%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Wed, 22 Sep 2021 11:23:40 +0800</pubDate>
       
-      <guid>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%AD%89%E5%BE%85%E4%B8%8E%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6/</guid>
-      <description>while 轮询存在缺陷      A 线程执行每一步的时间较长。
-public class ThreadA extends Thread{ private MyList list; public ThreadA(MyList list){ super(); this.list = list; } @Override public void run(){ super.run(); try{ for (int i = 0; i &amp;lt; 10; i++) { list.add(); System.out.println(Thread.currentThread().getName() + &amp;#34; Add &amp;#34; + i); Thread.sleep(1000); } }catch (InterruptedException e){ e.printStackTrace(); } } }   B线程执行轮询的时间较短
-public class ThreadB extends Thread{ private MyList list; public ThreadB(MyList list){ super(); this.</description>
+      <guid>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.2%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F/</guid>
+      <description>问题：
+ threadP 在 setValue 时，lock.wait 失去了锁, 线程还会继续存在吗？ 『解答』还会继续存在, 但是处于 waiting 状态。没有能力去获取同步锁。
+  锁是可以重入的，是否意味着在 while 循环的作用下，会多次调用 setValue，而有一部分的调用被阻塞了得不到响应？ 『解答』不会多次调用 setValue。
+  锁可以重入，在上一个 lock.wait 未响应的情况下，是否可以再进入同步块进行对应操作？ 『解答』执行了 lock.wait 线程就被挂起，进入 waiting 状态。
+  一个生产者、一个消费者 基于 wait/notify 机制 P.java
+public class P { String lock; public P(String lock){ this.lock = lock; } public void setValue(){ try{ synchronized(lock){ if (!ValueObject.value.equals(&amp;#34;&amp;#34;)){ lock.wait();//lock will be release, but thread exist always.  } String str = System.</description>
     </item>
     
     <item>
-      <title></title>
-      <link>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <title>3.1等待与通知机制</title>
+      <link>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.1%E7%AD%89%E5%BE%85%E4%B8%8E%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6/</link>
+      <pubDate>Thu, 09 Sep 2021 20:03:54 +0800</pubDate>
       
-      <guid>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F/</guid>
-      <description>生产者消费者模式    </description>
+      <guid>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.1%E7%AD%89%E5%BE%85%E4%B8%8E%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6/</guid>
+      <description>while 轮询存在缺陷      A 线程执行每一步的时间较长。
+public class ThreadA extends Thread{ private MyList list; public ThreadA(MyList list){ super(); this.list = list; } @Override public void run(){ super.run(); try{ for (int i = 0; i &amp;lt; 10; i++) { list.add(); System.out.println(Thread.currentThread().getName() + &amp;#34; Add &amp;#34; + i); Thread.sleep(1000); } }catch (InterruptedException e){ e.printStackTrace(); } } }   B线程执行轮询的时间较短
+public class ThreadB extends Thread{ private MyList list; public ThreadB(MyList list){ super(); this.</description>
     </item>
     
   </channel>
