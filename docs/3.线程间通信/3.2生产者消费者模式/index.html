@@ -15,7 +15,7 @@
   锁是可以重入的，是否意味着在 while 循环的作用下，会多次调用 setValue，而有一部分的调用被阻塞了得不到响应？ 『解答』不会多次调用 setValue。
   锁可以重入，在上一个 lock.wait 未响应的情况下，是否可以再进入同步块进行对应操作？ 『解答』执行了 lock.wait 线程就被挂起，进入 waiting 状态。
   一个生产者、一个消费者 基于 wait/notify 机制 P.java
-public class P { String lock; public P(String lock){ this.lock = lock; } public void setValue(){ try{ synchronized(lock){ if (!ValueObject.value.equals(&#34;&#34;)){ lock.wait();//lock will be release, but thread exist always.  } String str = System.">
+public class P { String lock; public P(String lock){ this.lock = lock; } public void setValue(){ try{ synchronized(lock){ if (!ValueObject.value.equals(&#34;&#34;)){ lock.wait();//lock will be release, but thread exist always(waiting), and the thread loss the ability to get lock.">
 
 
 
@@ -546,7 +546,7 @@ P.java</p>
         <span class="k">try</span><span class="o">{</span>
             <span class="kd">synchronized</span><span class="o">(</span><span class="n">lock</span><span class="o">){</span>
                 <span class="k">if</span> <span class="o">(!</span><span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)){</span>
-                    <span class="n">lock</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span><span class="c1">//lock will be release, but thread exist always.
+                    <span class="n">lock</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span><span class="c1">//lock will be release, but thread exist always(waiting), and the thread loss the ability to get lock.
 </span><span class="c1"></span>                <span class="o">}</span>
                 <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;_&#34;</span> <span class="o">+</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
                 <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Set:&#34;</span> <span class="o">+</span> <span class="n">str</span><span class="o">);</span>
