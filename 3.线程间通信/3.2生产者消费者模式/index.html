@@ -625,7 +625,108 @@ P.java</p>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></details>
+<details>
+<summary>多生产者多消费者——出现假死</summary>
+<p>多个生产者若使用 notify 进行通知，则可能出现『生产者通知消费者、消费者通知生产者、生产者通知生产者、消费者通知消费者』的情况，若通知出错的情况持续累积，就会造成程序假死。</p>
+<p>P.java</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">P</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="n">lock</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">P</span><span class="o">(</span><span class="n">String</span> <span class="n">lock</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">lock</span> <span class="o">=</span> <span class="n">lock</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setValue</span><span class="o">(){</span>
+        <span class="k">try</span><span class="o">{</span>
+            <span class="kd">synchronized</span><span class="o">(</span><span class="n">lock</span><span class="o">){</span>
+                <span class="k">while</span> <span class="o">(!</span><span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)){</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
+                <span class="o">}</span>
+                <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;_&#34;</span> <span class="o">+</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; Set:&#34;</span> <span class="o">+</span> <span class="n">str</span><span class="o">);</span>
+                <span class="c1">//Produce and notify
+</span><span class="c1"></span>                <span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">str</span><span class="o">;</span>
+                <span class="n">lock</span><span class="o">.</span><span class="na">notify</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
 
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>C.java</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">C</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="n">lock</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">C</span><span class="o">(</span><span class="n">String</span> <span class="n">lock</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">lock</span> <span class="o">=</span> <span class="n">lock</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">getValue</span><span class="o">(){</span>
+        <span class="k">try</span><span class="o">{</span>
+            <span class="kd">synchronized</span><span class="o">(</span><span class="n">lock</span><span class="o">){</span>
+                <span class="k">while</span> <span class="o">(</span><span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)){</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
+                <span class="o">}</span>
+                <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">;</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; Get:&#34;</span> <span class="o">+</span> <span class="n">str</span><span class="o">);</span>
+                <span class="c1">//Consume and notify
+</span><span class="c1"></span>                <span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="s">&#34;&#34;</span><span class="o">;</span>
+                <span class="n">lock</span><span class="o">.</span><span class="na">notify</span><span class="o">();</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>ThreadP.java</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadP</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="n">P</span> <span class="n">p</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">ThreadP</span><span class="o">(</span><span class="n">P</span> <span class="n">p</span><span class="o">){</span>
+        <span class="kd">super</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">p</span> <span class="o">=</span> <span class="n">p</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+            <span class="n">p</span><span class="o">.</span><span class="na">setValue</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>ThreadC.java</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadC</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="kd">public</span> <span class="n">C</span> <span class="n">c</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">ThreadC</span><span class="o">(</span><span class="n">C</span> <span class="n">c</span><span class="o">){</span>
+        <span class="kd">super</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">c</span> <span class="o">=</span> <span class="n">c</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="k">while</span><span class="o">(</span><span class="kc">true</span><span class="o">){</span>
+            <span class="n">c</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>run.java</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+        <span class="n">String</span> <span class="n">lock</span> <span class="o">=</span> <span class="s">&#34;s&#34;</span><span class="o">;</span>
+        <span class="n">Thread</span><span class="o">[]</span> <span class="n">producer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadP</span><span class="o">[</span><span class="n">2</span><span class="o">];</span>
+        <span class="n">Thread</span><span class="o">[]</span> <span class="n">consumer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadC</span><span class="o">[</span><span class="n">2</span><span class="o">];</span>
+
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">2</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">producer</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadP</span><span class="o">(</span><span class="k">new</span> <span class="n">P</span><span class="o">(</span><span class="n">lock</span><span class="o">));</span>
+            <span class="n">producer</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;生产者&#34;</span> <span class="o">+</span> <span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="n">1</span><span class="o">));</span>
+            <span class="n">consumer</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadC</span><span class="o">(</span><span class="k">new</span> <span class="n">C</span><span class="o">(</span><span class="n">lock</span><span class="o">));</span>
+            <span class="n">consumer</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;消费者&#34;</span> <span class="o">+</span> <span class="o">(</span><span class="n">i</span><span class="o">+</span><span class="n">1</span><span class="o">));</span>
+            <span class="n">producer</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
+            <span class="n">consumer</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>如何解决 notify 通知不到其他类？</p>
+<blockquote>
+<p>使用 notifyAll()</p>
+</blockquote>
+</details>
     </article>
 
                 
