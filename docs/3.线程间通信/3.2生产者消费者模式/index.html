@@ -627,7 +627,8 @@ P.java</p>
 </code></pre></div></details>
 <details>
 <summary>多生产者多消费者——出现假死</summary>
-<p>多个生产者若使用 notify 进行通知，则可能出现『生产者通知消费者、消费者通知生产者、生产者通知生产者、消费者通知消费者』的情况，若通知出错的情况持续累积，就会造成程序假死。</p>
+<p>多个生产者和多个消费者共同竞争一把锁。
+多个生产者若使用 notify 进行通知，则可能出现『生产者通知消费者、消费者通知生产者、生产者通知生产者、消费者通知消费者』的情况，若通知出错的情况持续累积，就会造成程序假死。</p>
 <p>P.java</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">P</span> <span class="o">{</span>
     <span class="n">String</span> <span class="n">lock</span><span class="o">;</span>
