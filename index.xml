@@ -18,7 +18,7 @@
   锁是可以重入的，是否意味着在 while 循环的作用下，会多次调用 setValue，而有一部分的调用被阻塞了得不到响应？ 『解答』不会多次调用 setValue。
   锁可以重入，在上一个 lock.wait 未响应的情况下，是否可以再进入同步块进行对应操作？ 『解答』执行了 lock.wait 线程就被挂起，进入 waiting 状态。
   一个生产者、一个消费者 基于 wait/notify 机制 P.java
-public class P { String lock; public P(String lock){ this.lock = lock; } public void setValue(){ try{ synchronized(lock){ if (!ValueObject.value.equals(&amp;#34;&amp;#34;)){ lock.wait();//lock will be release, but thread exist always(waiting), and the thread loss the ability to get lock.</description>
+public class P { String lock; public P(String lock){ this.lock = lock; } public void setValue(){ try{ synchronized(lock){ //使用 if 是不严谨的做法  if (!ValueObject.value.equals(&amp;#34;&amp;#34;)){ lock.wait();//lock will be release, but thread exist always(waiting), and the thread loss the ability to get lock.</description>
     </item>
     
     <item>
