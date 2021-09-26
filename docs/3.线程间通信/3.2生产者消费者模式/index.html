@@ -723,10 +723,14 @@ P.java</p>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div><p>如何解决 notify 通知不到其他类？</p>
+</code></pre></div><p>以上代码只随机通知一个线程，即是说<strong>不能确定通知的对象是消费者还是生产者</strong>，如下图，当生产者生产产品之后若通知的是其他生产者线程，就会出现假死。</p>
+<p><img src="/%e5%a4%9a%e7%ba%bf%e7%a8%8b/3.%e7%ba%bf%e7%a8%8b%e9%80%9a%e4%bf%a1/fakeDead.png" alt=""  /></p>
+<p>如何解决 notify 通知不到其他类？</p>
 <blockquote>
 <p>使用 notifyAll()</p>
 </blockquote>
+<p><strong>通知(notify)的速度比直接代码执行(比如 while 语句)慢</strong>。</p>
+<p>因为通知涉及到线程调度，所以 notifyAll 之后，同步块结束释放锁, while会直接进行下一次的 setValue 或者 getValue.</p>
 </details>
 <details>
 <summary>一个生产者一个消费者操作栈</summary>
