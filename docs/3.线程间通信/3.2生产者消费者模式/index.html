@@ -15,7 +15,7 @@
   锁是可以重入的，是否意味着在 while 循环的作用下，会多次调用 setValue，而有一部分的调用被阻塞了得不到响应？ 『解答』不会多次调用 setValue。
   锁可以重入，在上一个 lock.wait 未响应的情况下，是否可以再进入同步块进行对应操作？ 『解答』执行了 lock.wait 线程就被挂起，进入 waiting 状态。
   一个生产者、一个消费者 基于 wait/notify 机制 P.java
-public class P { String lock; public P(String lock){ this.lock = lock; } public void setValue(){ try{ synchronized(lock){ if (!ValueObject.value.equals(&#34;&#34;)){ lock.wait();//lock will be release, but thread exist always(waiting), and the thread loss the ability to get lock.">
+public class P { String lock; public P(String lock){ this.lock = lock; } public void setValue(){ try{ synchronized(lock){ //使用 if 是不严谨的做法  if (!ValueObject.value.equals(&#34;&#34;)){ lock.wait();//lock will be release, but thread exist always(waiting), and the thread loss the ability to get lock.">
 
 
 
@@ -545,7 +545,8 @@ P.java</p>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setValue</span><span class="o">(){</span>
         <span class="k">try</span><span class="o">{</span>
             <span class="kd">synchronized</span><span class="o">(</span><span class="n">lock</span><span class="o">){</span>
-                <span class="k">if</span> <span class="o">(!</span><span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)){</span>
+                <span class="c1">//使用 if 是不严谨的做法
+</span><span class="c1"></span>                <span class="k">if</span> <span class="o">(!</span><span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)){</span>
                     <span class="n">lock</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span><span class="c1">//lock will be release, but thread exist always(waiting), and the thread loss the ability to get lock.
 </span><span class="c1"></span>                <span class="o">}</span>
                 <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;_&#34;</span> <span class="o">+</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
@@ -569,7 +570,8 @@ P.java</p>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">getValue</span><span class="o">(){</span>
         <span class="k">try</span><span class="o">{</span>
             <span class="kd">synchronized</span><span class="o">(</span><span class="n">lock</span><span class="o">){</span>
-                <span class="k">if</span> <span class="o">(</span><span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)){</span>
+                <span class="c1">//使用 if 是不严谨的做法
+</span><span class="c1"></span>                <span class="k">if</span> <span class="o">(</span><span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)){</span>
                     <span class="n">lock</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
                 <span class="o">}</span>
                 <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">;</span>
@@ -731,6 +733,36 @@ P.java</p>
 </blockquote>
 <p><strong>通知(notify)的速度比直接代码执行(比如 while 语句)慢</strong>。</p>
 <p>因为通知涉及到线程调度，所以 notifyAll 之后，同步块结束释放锁, while会直接进行下一次的 setValue 或者 getValue.</p>
+<p>关于 while 和 if 的问题：</p>
+<p>错误的使用（等待的条件发生了改变）</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"> <span class="kd">synchronized</span><span class="o">(</span><span class="n">lock</span><span class="o">){</span>
+                <span class="c1">//使用 if，处于 waiting 状态的线程被通知，若 ValueObject.value 为空，则在条件不满足的情况下也会执行业务代码（if外面的部分）
+</span><span class="c1"></span>                <span class="k">if</span> <span class="o">(!</span><span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)){</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span><span class="s">&#34; waiting5&#34;</span><span class="o">);</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
+                <span class="o">}</span>
+                <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;_&#34;</span> <span class="o">+</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span><span class="s">&#34; running&#34;</span> <span class="o">+</span> <span class="s">&#34; Set:&#34;</span> <span class="o">+</span> <span class="n">str</span> <span class="o">+</span> <span class="s">&#34; : &#34;</span><span class="o">+</span> <span class="n">ValueObject</span><span class="o">.</span><span class="na">num</span><span class="o">++);</span>
+                <span class="c1">//Produce and notify
+</span><span class="c1"></span>                <span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">str</span><span class="o">;</span>
+                <span class="n">lock</span><span class="o">.</span><span class="na">notify</span><span class="o">();</span>
+            <span class="o">}</span>
+</code></pre></div><p>正确的使用</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"> <span class="kd">synchronized</span><span class="o">(</span><span class="n">lock</span><span class="o">){</span>
+                <span class="c1">//此处使用的是 while。处于 waiting 状态的线程被通知时，若ValueObject.value 为空，则线程应该继续等待。
+</span><span class="c1"></span>                <span class="k">while</span> <span class="o">(!</span><span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)){</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span><span class="s">&#34; waiting5&#34;</span><span class="o">);</span>
+                    <span class="n">lock</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
+                <span class="o">}</span>
+                <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;_&#34;</span> <span class="o">+</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span><span class="s">&#34; running&#34;</span> <span class="o">+</span> <span class="s">&#34; Set:&#34;</span> <span class="o">+</span> <span class="n">str</span> <span class="o">+</span> <span class="s">&#34; : &#34;</span><span class="o">+</span> <span class="n">ValueObject</span><span class="o">.</span><span class="na">num</span><span class="o">++);</span>
+                <span class="c1">//Produce and notify
+</span><span class="c1"></span>                <span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">str</span><span class="o">;</span>
+                <span class="n">lock</span><span class="o">.</span><span class="na">notify</span><span class="o">();</span>
+            <span class="o">}</span>
+            
+</code></pre></div><p><strong>这样的多个生产者对多个消费者的模式类似于点对点通信。</strong></p>
+<p>对于同一块数据域，自己操作了数据域就得通知其他的所有的端，循环判断数据域是否可操作，不可操作则进入等待。</p>
 </details>
 <details>
 <summary>一个生产者一个消费者操作栈</summary>
