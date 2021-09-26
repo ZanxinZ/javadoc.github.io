@@ -15,10 +15,12 @@
       <guid>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.2%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F/</guid>
       <description>问题：
  threadP 在 setValue 时，lock.wait 失去了锁, 线程还会继续存在吗？ 『解答』还会继续存在, 但是处于 waiting 状态。没有能力去获取同步锁。
-  锁是可以重入的，是否意味着在 while 循环的作用下，会多次调用 setValue，而有一部分的调用被阻塞了得不到响应？ 『解答』不会多次调用 setValue。
+  锁是可以重入的，是否意味着在 while 循环的作用下，会多次调用 setValue，而有一部分的调用被阻塞了得不到响应？ 『解答』不会多次调用 setValue, 因为执行了lock。wait() 之后线程被挂起了。
   锁可以重入，在上一个 lock.wait 未响应的情况下，是否可以再进入同步块进行对应操作？ 『解答』执行了 lock.wait 线程就被挂起，进入 waiting 状态。
-  一个生产者、一个消费者 基于 wait/notify 机制 P.java
-public class P { String lock; public P(String lock){ this.lock = lock; } public void setValue(){ try{ synchronized(lock){ //使用 if 是不严谨的做法  if (!ValueObject.value.equals(&amp;#34;&amp;#34;)){ lock.wait();//lock will be release, but thread exist always(waiting), and the thread loss the ability to get lock.</description>
+ 一个生产者、一个消费者    基于 wait/notify 机制
+若数据域有内容，则生产者不生产，线程挂起；反之，生产者生产产品并且发出通知。
+若数据域没有内容，则消费者不消费，线程挂起；反之，消费者消费产品并且发出通知。
+ P.java public class P { String lock; public P(String lock){ this.lock = lock; } public void setValue(){ try{ synchronized(lock){ //使用 if 是不严谨的做法  if (!ValueObject.value.equals(&amp;#34;&amp;#34;)){ lock.wait();//lock will be release, but thread exist always(waiting), and the thread loss the ability to get lock.</description>
     </item>
     
     <item>

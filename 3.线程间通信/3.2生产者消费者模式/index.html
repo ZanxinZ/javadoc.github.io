@@ -12,10 +12,12 @@
 
     <meta name="description" content="问题：
  threadP 在 setValue 时，lock.wait 失去了锁, 线程还会继续存在吗？ 『解答』还会继续存在, 但是处于 waiting 状态。没有能力去获取同步锁。
-  锁是可以重入的，是否意味着在 while 循环的作用下，会多次调用 setValue，而有一部分的调用被阻塞了得不到响应？ 『解答』不会多次调用 setValue。
+  锁是可以重入的，是否意味着在 while 循环的作用下，会多次调用 setValue，而有一部分的调用被阻塞了得不到响应？ 『解答』不会多次调用 setValue, 因为执行了lock。wait() 之后线程被挂起了。
   锁可以重入，在上一个 lock.wait 未响应的情况下，是否可以再进入同步块进行对应操作？ 『解答』执行了 lock.wait 线程就被挂起，进入 waiting 状态。
-  一个生产者、一个消费者 基于 wait/notify 机制 P.java
-public class P { String lock; public P(String lock){ this.lock = lock; } public void setValue(){ try{ synchronized(lock){ //使用 if 是不严谨的做法  if (!ValueObject.value.equals(&#34;&#34;)){ lock.wait();//lock will be release, but thread exist always(waiting), and the thread loss the ability to get lock.">
+ 一个生产者、一个消费者    基于 wait/notify 机制
+若数据域有内容，则生产者不生产，线程挂起；反之，生产者生产产品并且发出通知。
+若数据域没有内容，则消费者不消费，线程挂起；反之，消费者消费产品并且发出通知。
+ P.java public class P { String lock; public P(String lock){ this.lock = lock; } public void setValue(){ try{ synchronized(lock){ //使用 if 是不严谨的做法  if (!ValueObject.value.equals(&#34;&#34;)){ lock.wait();//lock will be release, but thread exist always(waiting), and the thread loss the ability to get lock.">
 
 
 
@@ -527,16 +529,24 @@ public class P { String lock; public P(String lock){ this.lock = lock; } public 
 </blockquote>
 <blockquote>
 <p>锁是可以重入的，是否意味着在 while 循环的作用下，会多次调用 setValue，而有一部分的调用被阻塞了得不到响应？
-『解答』不会多次调用 setValue。</p>
+『解答』不会多次调用 setValue, 因为执行了lock。wait() 之后线程被挂起了。</p>
 </blockquote>
 <blockquote>
 <p>锁可以重入，在上一个 lock.wait 未响应的情况下，是否可以再进入同步块进行对应操作？
 『解答』执行了 lock.wait 线程就被挂起，进入 waiting 状态。</p>
 </blockquote>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="一个生产者一个消费者">
+        一个生产者、一个消费者
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.2%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F/#一个生产者一个消费者" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 一个生产者、一个消费者" href="#%e4%b8%80%e4%b8%aa%e7%94%9f%e4%ba%a7%e8%80%85%e4%b8%80%e4%b8%aa%e6%b6%88%e8%b4%b9%e8%80%85">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>基于 wait/notify 机制</p>
+<p>若数据域有内容，则生产者不生产，线程挂起；反之，生产者生产产品并且发出通知。</p>
+<p>若数据域没有内容，则消费者不消费，线程挂起；反之，消费者消费产品并且发出通知。</p>
 <details>
-<summary>一个生产者、一个消费者</summary>
-<p>基于 wait/notify 机制
-P.java</p>
+<summary>P.java</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">P</span> <span class="o">{</span>
     <span class="n">String</span> <span class="n">lock</span><span class="o">;</span>
     <span class="kd">public</span> <span class="nf">P</span><span class="o">(</span><span class="n">String</span> <span class="n">lock</span><span class="o">){</span>
@@ -561,7 +571,9 @@ P.java</p>
 
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div><p>C.java</p>
+</code></pre></div></details>
+<details>
+<summary>C.java</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">C</span> 
     <span class="n">String</span> <span class="n">lock</span><span class="o">;</span>
     <span class="kd">public</span> <span class="nf">C</span><span class="o">(</span><span class="n">String</span> <span class="n">lock</span><span class="o">){</span>
@@ -586,7 +598,9 @@ P.java</p>
 
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div><p>ThreadP.java</p>
+</code></pre></div></details>
+<details>
+<summary>ThreadP.java</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadP</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
     <span class="kd">public</span> <span class="n">P</span> <span class="n">p</span><span class="o">;</span>
     <span class="kd">public</span> <span class="nf">ThreadP</span><span class="o">(</span><span class="n">P</span> <span class="n">p</span><span class="o">){</span>
@@ -600,7 +614,9 @@ P.java</p>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div><p>ThreadC.java</p>
+</code></pre></div></details>
+<details>
+<summary>ThreadC.java</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadC</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
     <span class="kd">public</span> <span class="n">C</span> <span class="n">c</span><span class="o">;</span>
     <span class="kd">public</span> <span class="nf">ThreadC</span><span class="o">(</span><span class="n">C</span> <span class="n">c</span><span class="o">){</span>
@@ -615,7 +631,9 @@ P.java</p>
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div><p>Run.java</p>
+</code></pre></div></details>
+<details>
+<summary>Run.java</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
         <span class="n">String</span> <span class="n">lock</span> <span class="o">=</span> <span class="s">&#34;s&#34;</span><span class="o">;</span>
@@ -627,9 +645,14 @@ P.java</p>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></details>
-<details>
-<summary>多生产者多消费者——出现假死</summary>
-<p>多个生产者和多个消费者共同竞争一把锁。
+<div class="gdoc-page__anchorwrap">
+    <h2 id="多生产者多消费者">
+        多生产者多消费者
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.2%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F/#多生产者多消费者" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 多生产者多消费者" href="#%e5%a4%9a%e7%94%9f%e4%ba%a7%e8%80%85%e5%a4%9a%e6%b6%88%e8%b4%b9%e8%80%85">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>多个生产者和多个消费者共同竞争一把锁。
 多个生产者若使用 notify 进行通知，则可能出现『生产者通知消费者、消费者通知生产者、生产者通知生产者、消费者通知消费者』的情况，若通知出错的情况持续累积，就会造成程序假死。</p>
 <p>P.java</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">P</span> <span class="o">{</span>
@@ -727,18 +750,26 @@ P.java</p>
 <span class="o">}</span>
 </code></pre></div><p>以上代码只随机通知一个线程，即是说<strong>不能确定通知的对象是消费者还是生产者</strong>，如下图，当生产者生产产品之后若通知的是其他生产者线程，就会出现假死。</p>
 <p><img src="/%e5%a4%9a%e7%ba%bf%e7%a8%8b/3.%e7%ba%bf%e7%a8%8b%e9%80%9a%e4%bf%a1/fakeDead.png" alt=""  /></p>
-<p>如何解决 notify 通知不到其他类？</p>
+<p>如何解决 notify 通知不到其他类（假死）？</p>
 <blockquote>
 <p>使用 notifyAll()</p>
 </blockquote>
 <p><strong>通知(notify)的速度比直接代码执行(比如 while 语句)慢</strong>。</p>
 <p>因为通知涉及到线程调度，所以 notifyAll 之后，同步块结束释放锁, while会直接进行下一次的 setValue 或者 getValue.</p>
-<p>关于 while 和 if 的问题：</p>
-<p>错误的使用（等待的条件发生了改变）</p>
+<div class="gdoc-page__anchorwrap">
+    <h3 id="关于-while-和-if-的问题">
+        关于 while 和 if 的问题：
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.2%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F/#关于-while-和-if-的问题" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 关于 while 和 if 的问题：" href="#%e5%85%b3%e4%ba%8e-while-%e5%92%8c-if-%e7%9a%84%e9%97%ae%e9%a2%98">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h3>
+</div><p><strong>错误的使用（等待的条件发生了改变）</strong></p>
+<p>多个线程先后进入 if　块的的时候，条件还是满足的，于是多个线程进入waiting　状态，并且释放锁。当其中一个线程离开等待状态，并且通知消费者来修改进入等待的条件（　value　被清空），那么其他处于等待的线程还是会被唤醒，也做出一样的动作。</p>
+<p>运行过程中造成了『生产者１生产之后，通知所有。生产者２被通知到则继续生产，通知所有。生产者1被通知到则继续生产，通知所有。循环往复』、『消费者１消费了产品，通知所有。消费者２被通知到则继续消费，通知所有。消费者１被通知到则继续消费，通知所有。循环往复』的问题的偶然出现。</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"> <span class="kd">synchronized</span><span class="o">(</span><span class="n">lock</span><span class="o">){</span>
                 <span class="c1">//使用 if，处于 waiting 状态的线程被通知，若 ValueObject.value 为空，则在条件不满足的情况下也会执行业务代码（if外面的部分）
 </span><span class="c1"></span>                <span class="k">if</span> <span class="o">(!</span><span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)){</span>
-                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span><span class="s">&#34; waiting5&#34;</span><span class="o">);</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span><span class="s">&#34; waiting&#34;</span><span class="o">);</span>
                     <span class="n">lock</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
                 <span class="o">}</span>
                 <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;_&#34;</span> <span class="o">+</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
@@ -747,11 +778,12 @@ P.java</p>
 </span><span class="c1"></span>                <span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="n">str</span><span class="o">;</span>
                 <span class="n">lock</span><span class="o">.</span><span class="na">notify</span><span class="o">();</span>
             <span class="o">}</span>
-</code></pre></div><p>正确的使用</p>
+</code></pre></div><p>正确的使用：</p>
+<p>waiting　状态的线程被通知之后，要再次判断是否应该继续等待（对等待条件再次判断）。</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"> <span class="kd">synchronized</span><span class="o">(</span><span class="n">lock</span><span class="o">){</span>
                 <span class="c1">//此处使用的是 while。处于 waiting 状态的线程被通知时，若ValueObject.value 为空，则线程应该继续等待。
 </span><span class="c1"></span>                <span class="k">while</span> <span class="o">(!</span><span class="n">ValueObject</span><span class="o">.</span><span class="na">value</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;&#34;</span><span class="o">)){</span>
-                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span><span class="s">&#34; waiting5&#34;</span><span class="o">);</span>
+                    <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span><span class="s">&#34; waiting&#34;</span><span class="o">);</span>
                     <span class="n">lock</span><span class="o">.</span><span class="na">wait</span><span class="o">();</span>
                 <span class="o">}</span>
                 <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;_&#34;</span> <span class="o">+</span> <span class="n">System</span><span class="o">.</span><span class="na">nanoTime</span><span class="o">();</span>
@@ -762,11 +794,21 @@ P.java</p>
             <span class="o">}</span>
             
 </code></pre></div><p><strong>这样的多个生产者对多个消费者的模式类似于点对点通信。</strong></p>
-<p>对于同一块数据域，自己操作了数据域就得通知其他的所有的端，循环判断数据域是否可操作，不可操作则进入等待。</p>
-</details>
-<details>
-<summary>一个生产者一个消费者操作栈</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"></code></pre></div></detatils>
+<p>对于同一块数据域，自己操作了数据域就得通知其他的所有的端，在收到通知的时候需要再次确认数据域是否可操作，不可操作则再次进入等待。</p>
+<div class="gdoc-page__anchorwrap">
+    <h3 id="生产者消费者模式的总结">
+        生产者消费者模式的总结
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.2%E7%94%9F%E4%BA%A7%E8%80%85%E6%B6%88%E8%B4%B9%E8%80%85%E6%A8%A1%E5%BC%8F/#生产者消费者模式的总结" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 生产者消费者模式的总结" href="#%e7%94%9f%e4%ba%a7%e8%80%85%e6%b6%88%e8%b4%b9%e8%80%85%e6%a8%a1%e5%bc%8f%e7%9a%84%e6%80%bb%e7%bb%93">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h3>
+</div><ul>
+<li>首先需要确保使用同一把锁。</li>
+<li>一个生产者一个消费者的情况下，使用 if 与 notify 不会影响线程的执行逻辑。</li>
+<li>『一个生产者多个消费者、多个生产者一个消费者、多个生产者多个消费者』的情况下，必须使用 while 和 notifyAll 来保证程序运行准确。</li>
+<li>lock.wait()使得当前线程进入 waiting 状态，并且释放锁。</li>
+</ul>
+
     </article>
 
                 
