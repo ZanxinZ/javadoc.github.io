@@ -14,7 +14,10 @@
       
       <guid>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.3%E7%AE%A1%E9%81%93%E6%B5%81/</guid>
       <description>一个线程发送数据到输出管道，另外一个线程从输入管道中读取数据。
-工具类：PipedInputStream, PipedOutputStream, PipedReader, PipedWriter</description>
+工具类：PipedInputStream, PipedOutputStream, PipedReader, PipedWriter
+PipedInputStream 通信大小有限制，一个批次默认是 1024 字节。
+发送者写满 1024 字节后，接收者开始读取，读取完成一批之后再开始下一批。
+代码     WriteData.java import java.io.PipedOutputStream; public class WriteData { public void write(PipedOutputStream outputStream){ try{ System.out.println(&amp;#34;Write:&amp;#34; + Thread.currentThread().getName()); for (int i = 0; i &amp;lt; 300; i++) { String s = &amp;#34;i=&amp;#34; + i; outputStream.write(s.getBytes()); System.out.println(s); } }catch (Exception e){ } } }   ReadData.java import java.io.PipedInputStream; public class ReadData { public void read(PipedInputStream inputStream){ try{ System.</description>
     </item>
     
     <item>
