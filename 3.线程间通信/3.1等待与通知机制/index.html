@@ -406,6 +406,30 @@ public class ThreadB extends Thread{ private MyList list; public ThreadB(MyList 
             </li>
             
             
+            
+
+            
+            
+            
+            
+            
+            
+
+            <li>
+            
+            
+                <span class="flex">
+                    <a href="/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.4join%E6%96%B9%E6%B3%95/" class="gdoc-nav__entry ">
+                        3.4join方法
+                    </a>
+                </span>
+            
+            
+
+            
+            </li>
+            
+            
         
     </ul>
 
@@ -809,13 +833,24 @@ public class ThreadB extends Thread{ private MyList list; public ThreadB(MyList 
     <span class="n">A</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;A&#34;</span><span class="o">);</span>
 
     <span class="n">A</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>  <span class="c1">//先等待
-</span><span class="c1"></span>    <span class="n">B</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>  <span class="c1">//再等待
+</span><span class="c1"></span>    <span class="n">B</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>  <span class="c1">//再通知
 </span><span class="c1"></span><span class="o">}</span>
 </code></pre></div><p><img src="/%e5%a4%9a%e7%ba%bf%e7%a8%8b/3.%e7%ba%bf%e7%a8%8b%e9%80%9a%e4%bf%a1/%e6%ad%a3%e5%b8%b8%e7%ad%89%e5%be%85%e5%90%8e%e9%80%9a%e7%9f%a5.png" alt="正常等待后通知"  /></p>
 </li>
 <li>
 <p>wait 的条件发生变化会导致程序逻辑的混乱</p>
 </li>
+</ul>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="小结">
+        小结
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.1%E7%AD%89%E5%BE%85%E4%B8%8E%E9%80%9A%E7%9F%A5%E6%9C%BA%E5%88%B6/#小结" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 小结" href="#%e5%b0%8f%e7%bb%93">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><ul>
+<li>wait() 与 Thread.sleep()的区别
+wait() 会释放同步锁，而Thread.sleep() 不会释放锁。</li>
 </ul>
 </li>
 </ul>

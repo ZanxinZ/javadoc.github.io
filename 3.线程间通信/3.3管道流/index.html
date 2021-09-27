@@ -14,7 +14,7 @@
 工具类：PipedInputStream, PipedOutputStream, PipedReader, PipedWriter
 PipedInputStream 通信大小有限制，一个批次默认是 1024 字节。
 发送者写满 1024 字节后，接收者开始读取，读取完成一批之后再开始下一批。
-代码     WriteData.java import java.io.PipedOutputStream; public class WriteData { public void write(PipedOutputStream outputStream){ try{ System.out.println(&#34;Write:&#34; &#43; Thread.currentThread().getName()); for (int i = 0; i &lt; 300; i&#43;&#43;) { String s = &#34;i=&#34; &#43; i; outputStream.write(s.getBytes()); System.out.println(s); } }catch (Exception e){ } } }   ReadData.java import java.io.PipedInputStream; public class ReadData { public void read(PipedInputStream inputStream){ try{ System.">
+传输字节流     WriteData.java import java.io.PipedOutputStream; public class WriteData { public void write(PipedOutputStream outputStream){ try{ System.out.println(&#34;Write:&#34; &#43; Thread.currentThread().getName()); for (int i = 0; i &lt; 300; i&#43;&#43;) { String s = &#34;i=&#34; &#43; i; outputStream.write(s.getBytes()); System.out.println(s); } }catch (Exception e){ } } }   ReadData.java import java.io.PipedInputStream; public class ReadData { public void read(PipedInputStream inputStream){ try{ System.">
 
 
 
@@ -408,6 +408,30 @@ PipedInputStream 通信大小有限制，一个批次默认是 1024 字节。
             </li>
             
             
+            
+
+            
+            
+            
+            
+            
+            
+
+            <li>
+            
+            
+                <span class="flex">
+                    <a href="/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.4join%E6%96%B9%E6%B3%95/" class="gdoc-nav__entry ">
+                        3.4join方法
+                    </a>
+                </span>
+            
+            
+
+            
+            </li>
+            
+            
         
     </ul>
 
@@ -550,9 +574,9 @@ PipedInputStream 通信大小有限制，一个批次默认是 1024 字节。
 <p><strong>发送者写满 1024 字节后，接收者开始读取，读取完成一批之后再开始下一批。</strong></p>
 <p><img src="/%e5%a4%9a%e7%ba%bf%e7%a8%8b/3.%e7%ba%bf%e7%a8%8b%e9%80%9a%e4%bf%a1/%e7%ae%a1%e9%81%93%e5%a4%a7%e5%b0%8f%e6%9c%89%e9%99%90%e5%88%b6.png" alt=""  /></p>
 <div class="gdoc-page__anchorwrap">
-    <h2 id="代码">
-        代码
-        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.3%E7%AE%A1%E9%81%93%E6%B5%81/#代码" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 代码" href="#%e4%bb%a3%e7%a0%81">
+    <h2 id="传输字节流">
+        传输字节流
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.3%E7%AE%A1%E9%81%93%E6%B5%81/#传输字节流" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 传输字节流" href="#%e4%bc%a0%e8%be%93%e5%ad%97%e8%8a%82%e6%b5%81">
             <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
         </a>
     </h2>
@@ -661,6 +685,18 @@ PipedInputStream 通信大小有限制，一个批次默认是 1024 字节。
 <span class="o">}</span>
 </code></pre></div></details>
 <p>刚刚开始的时候，缓存区没有内容，接收者线程阻塞在 int b = inputStream.read(data); 直到整批内容写完。写和读的线程之间通过 b 来同步。</p>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="传输字符流">
+        传输字符流
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.3%E7%AE%A1%E9%81%93%E6%B5%81/#传输字符流" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 传输字符流" href="#%e4%bc%a0%e8%be%93%e5%ad%97%e7%ac%a6%e6%b5%81">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>write 时</p>
+<p><code>outputStream.write(str);</code></p>
+<p>read 时</p>
+<p><code>char[] data = new char[40];</code></p>
+<p><code>String str =  new String(data, 0, length);</code></p>
 
     </article>
 

@@ -8,6 +8,17 @@
     <language>en-us</language>
     <lastBuildDate>Wed, 08 Sep 2021 00:44:56 +0800</lastBuildDate><atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>3.4join方法</title>
+      <link>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.4join%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Mon, 27 Sep 2021 18:59:10 +0800</pubDate>
+      
+      <guid>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.4join%E6%96%B9%E6%B3%95/</guid>
+      <description>问题    子线程需要进行大量运算，主线程早于子线程退出。那么主线程无法获取子线程执行后的信息。
+『解决方法』主线程中调用子线程的 join，使得在子线程运行时，主线程进入 waiting 状态。join 之后主线程原地等待子线程销毁。
+ MyThread.java public class MyThread extends Thread{ @Override public void run(){ try{ long time = (long) (Math.random() * 10000); System.out.println(&amp;#34;time:&amp;#34; + time); Thread.sleep(time); }catch(Exception e){ } } }   Run.java public class Run { public static void main(String[] args) { Thread t = new MyThread(); t.start(); try { t.join();//使得主线程被无限期阻塞，等待子线程销毁  } catch (Exception e){ } System.out.println(&amp;#34;can&amp;#34;); System.out.println(&amp;#34;you&amp;#34;); } }  join 之后，线程的 interrupt() 方法可以引发 InterruptedException     ThreadA.</description>
+    </item>
+    
+    <item>
       <title>3.3管道流</title>
       <link>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.3%E7%AE%A1%E9%81%93%E6%B5%81/</link>
       <pubDate>Sun, 26 Sep 2021 20:57:57 +0800</pubDate>
@@ -17,7 +28,7 @@
 工具类：PipedInputStream, PipedOutputStream, PipedReader, PipedWriter
 PipedInputStream 通信大小有限制，一个批次默认是 1024 字节。
 发送者写满 1024 字节后，接收者开始读取，读取完成一批之后再开始下一批。
-代码     WriteData.java import java.io.PipedOutputStream; public class WriteData { public void write(PipedOutputStream outputStream){ try{ System.out.println(&amp;#34;Write:&amp;#34; + Thread.currentThread().getName()); for (int i = 0; i &amp;lt; 300; i++) { String s = &amp;#34;i=&amp;#34; + i; outputStream.write(s.getBytes()); System.out.println(s); } }catch (Exception e){ } } }   ReadData.java import java.io.PipedInputStream; public class ReadData { public void read(PipedInputStream inputStream){ try{ System.</description>
+传输字节流     WriteData.java import java.io.PipedOutputStream; public class WriteData { public void write(PipedOutputStream outputStream){ try{ System.out.println(&amp;#34;Write:&amp;#34; + Thread.currentThread().getName()); for (int i = 0; i &amp;lt; 300; i++) { String s = &amp;#34;i=&amp;#34; + i; outputStream.write(s.getBytes()); System.out.println(s); } }catch (Exception e){ } } }   ReadData.java import java.io.PipedInputStream; public class ReadData { public void read(PipedInputStream inputStream){ try{ System.</description>
     </item>
     
     <item>
@@ -101,7 +112,7 @@ public class MyObject { private String userName = &amp;#34;A&amp;#34;; private S
       <guid>http://example.org/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/1.2%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/</guid>
       <description>停止线程      this.interrupted() 测试当前线程是否已经是中断状态，执行后把标志位设置为 false 。
   this.isInterrupted() 测试线程 Thread 是否已经中断，但不清除标志位。
-  thread.interrupt()，run 方法中有sleep，使用try的 catch**可以捕捉到 InterruptedException **的。
+  thread.interrupt()，run 方法中有sleep，使用try的 catch可以捕捉到 InterruptedException。
   异常法停止一个线程，抛出 InterruptedException 。（推荐）
   thread.stop() 暴力停止，不推荐。
   使用 return 停止线程。

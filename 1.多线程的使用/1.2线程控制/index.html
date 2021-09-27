@@ -12,7 +12,7 @@
 
     <meta name="description" content="停止线程      this.interrupted() 测试当前线程是否已经是中断状态，执行后把标志位设置为 false 。
   this.isInterrupted() 测试线程 Thread 是否已经中断，但不清除标志位。
-  thread.interrupt()，run 方法中有sleep，使用try的 catch**可以捕捉到 InterruptedException **的。
+  thread.interrupt()，run 方法中有sleep，使用try的 catch可以捕捉到 InterruptedException。
   异常法停止一个线程，抛出 InterruptedException 。（推荐）
   thread.stop() 暴力停止，不推荐。
   使用 return 停止线程。
@@ -414,6 +414,30 @@ thread.yield()
             </li>
             
             
+            
+
+            
+            
+            
+            
+            
+            
+
+            <li>
+            
+            
+                <span class="flex">
+                    <a href="/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.4join%E6%96%B9%E6%B3%95/" class="gdoc-nav__entry ">
+                        3.4join方法
+                    </a>
+                </span>
+            
+            
+
+            
+            </li>
+            
+            
         
     </ul>
 
@@ -564,7 +588,7 @@ thread.yield()
 <p>this.isInterrupted() 测试线程 Thread 是否已经中断，但不清除标志位。</p>
 </li>
 <li>
-<p>thread.interrupt()，run 方法中有sleep，使用try的 catch**可以捕捉到 InterruptedException **的。</p>
+<p>thread.interrupt()，run 方法中有sleep，使用try的 catch<strong>可以捕捉到 InterruptedException</strong>。</p>
 </li>
 <li>
 <p>异常法停止一个线程，抛出 InterruptedException 。（推荐）</p>
