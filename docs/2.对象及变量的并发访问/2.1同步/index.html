@@ -408,6 +408,30 @@ public class MyObject { private String userName = &#34;A&#34;; private String pa
             </li>
             
             
+            
+
+            
+            
+            
+            
+            
+            
+
+            <li>
+            
+            
+                <span class="flex">
+                    <a href="/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.4join%E6%96%B9%E6%B3%95/" class="gdoc-nav__entry ">
+                        3.4join方法
+                    </a>
+                </span>
+            
+            
+
+            
+            </li>
+            
+            
         
     </ul>
 
@@ -567,7 +591,7 @@ public class MyObject { private String userName = &#34;A&#34;; private String pa
         </a>
     </h2>
 </div><p>setValue() 时，中途进行 getValue() ，如果 getValue() 没有同步则可能出现脏读。</p>
-<p>同步锁作用于对象，非同步方法可以异步调用，同一对象的多个同步方法是同步调用。</p>
+<p>同步锁作用于对象，<strong>非同步方法可以异步调用</strong>，同一对象的多个同步方法是同步调用。</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyObject</span> <span class="o">{</span>
     <span class="kd">private</span> <span class="n">String</span> <span class="n">userName</span> <span class="o">=</span> <span class="s">&#34;A&#34;</span><span class="o">;</span>
     <span class="kd">private</span> <span class="n">String</span> <span class="n">password</span> <span class="o">=</span> <span class="s">&#34;AA&#34;</span><span class="o">;</span>
@@ -615,7 +639,7 @@ public class MyObject { private String userName = &#34;A&#34;; private String pa
 <p>如果锁不可重入，会造成死锁。</p>
 <p><strong>子类可以通过“可重入锁”调用父类的同步方法。</strong></p>
 <p>当前线程出现<strong>异常</strong>时，锁自动释放。</p>
-<p>同步不具有继承性。</p>
+<p><strong>同步不具有继承性。</strong></p>
 <div class="gdoc-page__anchorwrap">
     <h2 id="5-synchronized-的弊端">
         5. synchronized 的弊端
@@ -632,6 +656,19 @@ public class MyObject { private String userName = &#34;A&#34;; private String pa
 <span class="o">}</span>
 </code></pre></div><p>只同步共用的部分。</p>
 </li>
+</ul>
+<div class="gdoc-page__anchorwrap">
+    <h3 id="小结">
+        小结
+        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.1%E5%90%8C%E6%AD%A5/#小结" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 小结" href="#%e5%b0%8f%e7%bb%93">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h3>
+</div><ul>
+<li>每个对象都具有锁性质。</li>
+<li>synchronized 默认锁住的是对象</li>
+<li>synchronized(object) 是使用对象监视器来实现同步，使用的锁是 object 的锁。</li>
+<li>锁是一个线程对另外一个线程之间的关系，自己线程对自己线程的资源访问不涉及锁。</li>
 </ul>
 
     </article>

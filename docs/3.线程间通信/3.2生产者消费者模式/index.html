@@ -411,6 +411,30 @@
             </li>
             
             
+            
+
+            
+            
+            
+            
+            
+            
+
+            <li>
+            
+            
+                <span class="flex">
+                    <a href="/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.4join%E6%96%B9%E6%B3%95/" class="gdoc-nav__entry ">
+                        3.4join方法
+                    </a>
+                </span>
+            
+            
+
+            
+            </li>
+            
+            
         
     </ul>
 
@@ -678,7 +702,10 @@
     </h2>
 </div><p>多个生产者和多个消费者共同竞争一把锁。
 多个生产者若使用 notify 进行通知，则可能出现『生产者通知消费者、消费者通知生产者、生产者通知生产者、消费者通知消费者』的情况，若通知出错的情况持续累积，就会造成程序假死。</p>
-<p>P.java</p>
+<details>
+<summary>
+P.java
+</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">P</span> <span class="o">{</span>
     <span class="n">String</span> <span class="n">lock</span><span class="o">;</span>
     <span class="kd">public</span> <span class="nf">P</span><span class="o">(</span><span class="n">String</span> <span class="n">lock</span><span class="o">){</span>
@@ -702,7 +729,11 @@
 
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div><p>C.java</p>
+</code></pre></div></details>
+<details>
+<summary>
+C.java
+</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">C</span> <span class="o">{</span>
     <span class="n">String</span> <span class="n">lock</span><span class="o">;</span>
     <span class="kd">public</span> <span class="nf">C</span><span class="o">(</span><span class="n">String</span> <span class="n">lock</span><span class="o">){</span>
@@ -726,7 +757,11 @@
 
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div><p>ThreadP.java</p>
+</code></pre></div></details>
+<details>
+<summary>
+ThreadP.java
+</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadP</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
     <span class="kd">public</span> <span class="n">P</span> <span class="n">p</span><span class="o">;</span>
     <span class="kd">public</span> <span class="nf">ThreadP</span><span class="o">(</span><span class="n">P</span> <span class="n">p</span><span class="o">){</span>
@@ -740,7 +775,11 @@
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div><p>ThreadC.java</p>
+</code></pre></div></details>
+<details>
+<summary>
+ThreadC.java
+</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadC</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
     <span class="kd">public</span> <span class="n">C</span> <span class="n">c</span><span class="o">;</span>
     <span class="kd">public</span> <span class="nf">ThreadC</span><span class="o">(</span><span class="n">C</span> <span class="n">c</span><span class="o">){</span>
@@ -755,7 +794,11 @@
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div><p>run.java</p>
+</code></pre></div></details>
+<details>
+<summary>
+run.java
+</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
     <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
         <span class="n">String</span> <span class="n">lock</span> <span class="o">=</span> <span class="s">&#34;s&#34;</span><span class="o">;</span>
@@ -772,7 +815,8 @@
         <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div><p>以上代码只随机通知一个线程，即是说<strong>不能确定通知的对象是消费者还是生产者</strong>，如下图，当生产者生产产品之后若通知的是其他生产者线程，就会出现假死。</p>
+</code></pre></div></details>
+<p>以上代码只随机通知一个线程，即是说<strong>不能确定通知的对象是消费者还是生产者</strong>，如下图，当生产者生产产品之后若通知的是其他生产者线程，就会出现假死。</p>
 <p><img src="/%e5%a4%9a%e7%ba%bf%e7%a8%8b/3.%e7%ba%bf%e7%a8%8b%e9%80%9a%e4%bf%a1/fakeDead.png" alt=""  /></p>
 <p>如何解决 notify 通知不到其他类（假死）？</p>
 <blockquote>

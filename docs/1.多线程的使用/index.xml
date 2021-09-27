@@ -15,7 +15,7 @@
       <guid>http://example.org/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/1.2%E7%BA%BF%E7%A8%8B%E6%8E%A7%E5%88%B6/</guid>
       <description>停止线程      this.interrupted() 测试当前线程是否已经是中断状态，执行后把标志位设置为 false 。
   this.isInterrupted() 测试线程 Thread 是否已经中断，但不清除标志位。
-  thread.interrupt()，run 方法中有sleep，使用try的 catch**可以捕捉到 InterruptedException **的。
+  thread.interrupt()，run 方法中有sleep，使用try的 catch可以捕捉到 InterruptedException。
   异常法停止一个线程，抛出 InterruptedException 。（推荐）
   thread.stop() 暴力停止，不推荐。
   使用 return 停止线程。
