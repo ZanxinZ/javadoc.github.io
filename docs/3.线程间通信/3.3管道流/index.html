@@ -11,7 +11,10 @@
 
 
     <meta name="description" content="一个线程发送数据到输出管道，另外一个线程从输入管道中读取数据。
-工具类：PipedInputStream, PipedOutputStream, PipedReader, PipedWriter">
+工具类：PipedInputStream, PipedOutputStream, PipedReader, PipedWriter
+PipedInputStream 通信大小有限制，一个批次默认是 1024 字节。
+发送者写满 1024 字节后，接收者开始读取，读取完成一批之后再开始下一批。
+代码     WriteData.java import java.io.PipedOutputStream; public class WriteData { public void write(PipedOutputStream outputStream){ try{ System.out.println(&#34;Write:&#34; &#43; Thread.currentThread().getName()); for (int i = 0; i &lt; 300; i&#43;&#43;) { String s = &#34;i=&#34; &#43; i; outputStream.write(s.getBytes()); System.out.println(s); } }catch (Exception e){ } } }   ReadData.java import java.io.PipedInputStream; public class ReadData { public void read(PipedInputStream inputStream){ try{ System.">
 
 
 
@@ -542,6 +545,122 @@
         <h1>3.3管道流</h1>
         <p>一个线程发送数据到输出管道，另外一个线程从输入管道中读取数据。</p>
 <p>工具类：PipedInputStream, PipedOutputStream, PipedReader, PipedWriter</p>
+<p>PipedInputStream 通信大小有限制，一个批次默认是 1024 字节。</p>
+<p><img src="/%e5%a4%9a%e7%ba%bf%e7%a8%8b/3.%e7%ba%bf%e7%a8%8b%e9%80%9a%e4%bf%a1/%e7%ae%a1%e9%81%93%e7%bc%93%e5%ad%98%e5%a4%a7%e5%b0%8f.png" alt="管道缓存大小"  /></p>
+<p><strong>发送者写满 1024 字节后，接收者开始读取，读取完成一批之后再开始下一批。</strong></p>
+<p><img src="/%e5%a4%9a%e7%ba%bf%e7%a8%8b/3.%e7%ba%bf%e7%a8%8b%e9%80%9a%e4%bf%a1/%e7%ae%a1%e9%81%93%e5%a4%a7%e5%b0%8f%e6%9c%89%e9%99%90%e5%88%b6.png" alt=""  /></p>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="代码">
+        代码
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.3%E7%AE%A1%E9%81%93%E6%B5%81/#代码" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 代码" href="#%e4%bb%a3%e7%a0%81">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><details>
+<summary>WriteData.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.io.PipedOutputStream</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">WriteData</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">write</span><span class="o">(</span><span class="n">PipedOutputStream</span> <span class="n">outputStream</span><span class="o">){</span>
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Write:&#34;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">300</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="s">&#34;i=&#34;</span> <span class="o">+</span> <span class="n">i</span><span class="o">;</span>
+                <span class="n">outputStream</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">getBytes</span><span class="o">());</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<details>
+<summary>ReadData.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.io.PipedInputStream</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ReadData</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">read</span><span class="o">(</span><span class="n">PipedInputStream</span> <span class="n">inputStream</span><span class="o">){</span>
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Read:&#34;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+
+            <span class="kt">byte</span> <span class="o">[]</span> <span class="n">data</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="o">[</span><span class="n">40</span><span class="o">];</span>
+            <span class="kt">int</span> <span class="n">b</span> <span class="o">=</span> <span class="n">inputStream</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">data</span><span class="o">);</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">b</span> <span class="o">!=</span> <span class="o">-</span><span class="n">1</span><span class="o">){</span>
+                <span class="n">String</span> <span class="n">str</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="n">data</span><span class="o">,</span> <span class="n">0</span><span class="o">,</span> <span class="n">b</span><span class="o">);</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">str</span><span class="o">);</span>
+                <span class="n">b</span> <span class="o">=</span> <span class="n">inputStream</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">data</span><span class="o">);</span>
+            <span class="o">}</span>
+
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<details>
+<summary>ThreadWrite.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.io.PipedOutputStream</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadWrite</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="n">WriteData</span> <span class="n">writeData</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">PipedOutputStream</span> <span class="n">outputStream</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">ThreadWrite</span><span class="o">(</span><span class="n">PipedOutputStream</span> <span class="n">outputStream</span><span class="o">,</span> <span class="n">WriteData</span> <span class="n">writeData</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">outputStream</span> <span class="o">=</span> <span class="n">outputStream</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">writeData</span> <span class="o">=</span> <span class="n">writeData</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="n">writeData</span><span class="o">.</span><span class="na">write</span><span class="o">(</span><span class="n">outputStream</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></details>
+<details>
+<summary>ThreadRead.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.io.PipedInputStream</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadRead</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="n">PipedInputStream</span> <span class="n">inputStream</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="n">ReadData</span> <span class="n">readData</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">ThreadRead</span><span class="o">(</span><span class="n">PipedInputStream</span> <span class="n">inputStream</span><span class="o">,</span> <span class="n">ReadData</span> <span class="n">readData</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">inputStream</span> <span class="o">=</span> <span class="n">inputStream</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">readData</span> <span class="o">=</span> <span class="n">readData</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="n">readData</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">inputStream</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<details>
+<summary>Run.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.io.PipedInputStream</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.io.PipedOutputStream</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">WriteData</span> <span class="n">writeData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">WriteData</span><span class="o">();</span>
+        <span class="n">ReadData</span> <span class="n">readData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReadData</span><span class="o">();</span>
+        <span class="n">PipedInputStream</span> <span class="n">inputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PipedInputStream</span><span class="o">();</span>
+        <span class="n">PipedOutputStream</span> <span class="n">outputStream</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PipedOutputStream</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">outputStream</span><span class="o">.</span><span class="na">connect</span><span class="o">(</span><span class="n">inputStream</span><span class="o">);</span>  <span class="c1">// connect pipe
+</span><span class="c1"></span>        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+        <span class="n">ThreadWrite</span> <span class="n">write</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadWrite</span><span class="o">(</span><span class="n">outputStream</span><span class="o">,</span> <span class="n">writeData</span><span class="o">);</span>
+        <span class="n">ThreadRead</span> <span class="n">read</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadRead</span><span class="o">(</span><span class="n">inputStream</span><span class="o">,</span> <span class="n">readData</span><span class="o">);</span>
+        <span class="n">write</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;发送者&#34;</span><span class="o">);</span>
+        <span class="n">read</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;接收者&#34;</span><span class="o">);</span>
+        <span class="n">write</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">read</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<p>刚刚开始的时候，缓存区没有内容，接收者线程阻塞在 int b = inputStream.read(data); 直到整批内容写完。写和读的线程之间通过 b 来同步。</p>
 
     </article>
 
