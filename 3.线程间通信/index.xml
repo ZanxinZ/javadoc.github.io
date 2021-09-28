@@ -8,6 +8,19 @@
     <language>en-us</language>
     <lastBuildDate>Thu, 09 Sep 2021 18:28:48 +0800</lastBuildDate><atom:link href="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>3.5线程变量私有</title>
+      <link>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.5%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F%E7%A7%81%E6%9C%89/</link>
+      <pubDate>Tue, 28 Sep 2021 15:35:10 +0800</pubDate>
+      
+      <guid>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.5%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F%E7%A7%81%E6%9C%89/</guid>
+      <description>如果需要线程间进行变量共享，可以把变量定义为 public static.
+如果需要线程内部的变量共享，可以使用 ThreadLocal.
+1. ThreadLocal    public static ThreadLocal t = new ThreadLocal();
+ThreadLocal 具有 get() 和 set() 方法，不同线程拥有自己的域。
+ 子线程MyThread.java public class MyThread extends Thread{ @Override public void run(){ if (Run.t.get()==null){ System.out.println(&amp;#34;无&amp;#34;); Run.t.set(&amp;#34;子线程数据&amp;#34;); } System.out.println(Run.t.get()); } }    主线程 Run.java public class Run { public static ThreadLocal t = new ThreadLocal(); public static void main(String[] args) { MyThread s = new MyThread(); s.start(); if (t.</description>
+    </item>
+    
+    <item>
       <title>3.4join方法</title>
       <link>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.4join%E6%96%B9%E6%B3%95/</link>
       <pubDate>Mon, 27 Sep 2021 18:59:10 +0800</pubDate>
