@@ -10,17 +10,15 @@
 
 
 
-    <meta name="description" content="1.静态同步与 synchronized(class)    静态同步锁定的是类。
-  多个对象共用一把锁
-同一个类如果使用常量字符（常量字符串是存放在缓存中）串作为 synchronized(string) 对象监视器，并且对象 A 的同步方法中有死循环，那么其他对象无法调用该同步方法，表现为无限等待（其他线程被锁住）。
-  一个对象一把锁
-使用局部变量的方式可以避免锁住其他线程。
-  2. synchronized 无限等待    因为 synchronized 锁定的是对象，同一个对象的方法同步执行，当一个线程执行某个方法存在死循环时，其他线程会陷入无限等待。如下，thread 与 threadB 共用一个 service 。
-public class Service { synchronized public void service1(){ System.out.println(&#34;service1&#34;); while (true){ System.out.println(&#34;ha&#34;); } } synchronized public void service2(){ System.out.println(&#34;service2&#34;); } } public class MyThread extends Thread{ Service service; public MyThread(Service service){ this.service = service; } @Override public void run(){ super.">
+    <meta name="description" content="如果需要线程间进行变量共享，可以把变量定义为 public static.
+如果需要线程内部的变量共享，可以使用 ThreadLocal.
+1. ThreadLocal    public static ThreadLocal t = new ThreadLocal();
+ThreadLocal 具有 get() 和 set() 方法，不同线程拥有自己的域。
+ 子线程MyThread.java public class MyThread extends Thread{ @Override public void run(){ if (Run.t.get()==null){ System.out.println(&#34;无&#34;); Run.t.set(&#34;子线程数据&#34;); } System.out.println(Run.t.get()); } }    主线程 Run.java public class Run { public static ThreadLocal t = new ThreadLocal(); public static void main(String[] args) { MyThread s = new MyThread(); s.start(); if (t.">
 
 
 
-    <title>2.2同步中的无限等待 | 技术学习笔记</title>
+    <title>3.5线程变量私有 | 技术学习笔记</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -269,7 +267,7 @@ public class Service { synchronized public void service1(){ System.out.println(&
             
             
                 <span class="flex">
-                    <a href="/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.2%E5%90%8C%E6%AD%A5%E4%B8%AD%E7%9A%84%E6%97%A0%E9%99%90%E7%AD%89%E5%BE%85/" class="gdoc-nav__entry is-active">
+                    <a href="/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.2%E5%90%8C%E6%AD%A5%E4%B8%AD%E7%9A%84%E6%97%A0%E9%99%90%E7%AD%89%E5%BE%85/" class="gdoc-nav__entry ">
                         2.2同步中的无限等待
                     </a>
                 </span>
@@ -447,7 +445,7 @@ public class Service { synchronized public void service1(){ System.out.println(&
             
             
                 <span class="flex">
-                    <a href="/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.5%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F%E7%A7%81%E6%9C%89/" class="gdoc-nav__entry ">
+                    <a href="/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.5%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F%E7%A7%81%E6%9C%89/" class="gdoc-nav__entry is-active">
                         3.5线程变量私有
                     </a>
                 </span>
@@ -577,7 +575,7 @@ public class Service { synchronized public void service1(){ System.out.println(&
         
     
     
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/' href='/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/'><span itemprop='name'>2.对象及变量的并发访问</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>2.2同步中的无限等待</span><meta itemprop='position' content='3' /></li>
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/' href='/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/'><span itemprop='name'>3.线程间通信</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>3.5线程变量私有</span><meta itemprop='position' content='3' /></li>
     
 
     
@@ -592,146 +590,150 @@ public class Service { synchronized public void service1(){ System.out.println(&
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>2.2同步中的无限等待</h1>
-        <div class="gdoc-page__anchorwrap">
-    <h2 id="1静态同步与-synchronizedclass">
-        1.静态同步与 synchronized(class)
-        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.2%E5%90%8C%E6%AD%A5%E4%B8%AD%E7%9A%84%E6%97%A0%E9%99%90%E7%AD%89%E5%BE%85/#1静态同步与-synchronizedclass" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 1.静态同步与 synchronized(class)" href="#1%e9%9d%99%e6%80%81%e5%90%8c%e6%ad%a5%e4%b8%8e-synchronizedclass">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><p><strong>静态同步锁定的是类。</strong></p>
-<ul>
-<li>
-<p>多个对象共用一把锁</p>
-<p>同一个类如果使用常量字符（常量字符串是存放在缓存中）串作为 synchronized(string) 对象监视器，并且对象 A 的同步方法中有死循环，那么其他对象无法调用该同步方法，表现为无限等待（<strong>其他线程被锁住</strong>）。</p>
-</li>
-<li>
-<p>一个对象一把锁</p>
-<p>使用局部变量的方式可以避免锁住其他线程。</p>
-</li>
-</ul>
+        <h1>3.5线程变量私有</h1>
+        <p>如果需要线程间进行变量共享，可以把变量定义为 <strong>public static</strong>.</p>
+<p>如果需要线程内部的变量共享，可以使用 ThreadLocal.</p>
 <div class="gdoc-page__anchorwrap">
-    <h2 id="2-synchronized-无限等待">
-        2. synchronized 无限等待
-        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.2%E5%90%8C%E6%AD%A5%E4%B8%AD%E7%9A%84%E6%97%A0%E9%99%90%E7%AD%89%E5%BE%85/#2-synchronized-无限等待" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 2. synchronized 无限等待" href="#2-synchronized-%e6%97%a0%e9%99%90%e7%ad%89%e5%be%85">
+    <h2 id="1-threadlocal">
+        1. ThreadLocal
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.5%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F%E7%A7%81%E6%9C%89/#1-threadlocal" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 1. ThreadLocal" href="#1-threadlocal">
             <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
         </a>
     </h2>
-</div><p>因为 synchronized 锁定的是对象，同一个对象的方法同步执行，当一个线程<strong>执行某个方法存在死循环时</strong>，其他线程会陷入无限等待。如下，thread 与 threadB 共用一个 service 。</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Service</span> <span class="o">{</span>
-    <span class="kd">synchronized</span> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service1</span><span class="o">(){</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;service1&#34;</span><span class="o">);</span>
-        <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">){</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;ha&#34;</span><span class="o">);</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-    <span class="kd">synchronized</span> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service2</span><span class="o">(){</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;service2&#34;</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
-    <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
-    <span class="kd">public</span> <span class="nf">MyThread</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
-    <span class="o">}</span>
+</div><p><code>public static ThreadLocal t = new ThreadLocal();</code></p>
+<p>ThreadLocal 具有 get() 和 set() 方法，不同线程拥有自己的域。</p>
+  <details>
+  <summary>子线程MyThread.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
     <span class="nd">@Override</span>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="kd">super</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
-        <span class="n">service</span><span class="o">.</span><span class="na">service1</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">Run</span><span class="o">.</span><span class="na">t</span><span class="o">.</span><span class="na">get</span><span class="o">()==</span><span class="kc">null</span><span class="o">){</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;无&#34;</span><span class="o">);</span>
+            <span class="n">Run</span><span class="o">.</span><span class="na">t</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">&#34;子线程数据&#34;</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Run</span><span class="o">.</span><span class="na">t</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
     <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThreadB</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
-    <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
-    <span class="kd">public</span> <span class="nf">MyThreadB</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
-    <span class="o">}</span>
+</code></pre></div>  </details>
+  <details>
+  <summary>主线程 Run.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="n">ThreadLocal</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadLocal</span><span class="o">();</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+      <span class="n">MyThread</span> <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">();</span>
+      <span class="n">s</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+
+      <span class="k">if</span> <span class="o">(</span><span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">()</span> <span class="o">==</span> <span class="kc">null</span><span class="o">){</span>
+          <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;未有值&#34;</span><span class="o">);</span>
+          <span class="n">t</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="s">&#34;Hi&#34;</span><span class="o">);</span>
+      <span class="o">}</span>
+      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">());</span>
+
+  <span class="o">}</span>
+</code></pre></div>  </details>
+<p>运行结果</p>
+<blockquote>
+<p>未有值<br>
+Hi<br>
+无<br>
+子线程数据<br></p>
+</blockquote>
+<p>这表明，不同线程去访问同一静态域 t，所得到的内容是不一样的。<strong>每个线程只能取得属于自己的那一份</strong>。</p>
+<div class="gdoc-page__anchorwrap">
+    <h3 id="若需要给-threadlocal-设置初始值">
+        若需要给 ThreadLocal 设置初始值
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.5%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F%E7%A7%81%E6%9C%89/#若需要给-threadlocal-设置初始值" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 若需要给 ThreadLocal 设置初始值" href="#%e8%8b%a5%e9%9c%80%e8%a6%81%e7%bb%99-threadlocal-%e8%ae%be%e7%bd%ae%e5%88%9d%e5%a7%8b%e5%80%bc">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h3>
+</div><p>可以继承 ThreadLocal 并且重写值初始化方法。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThreadLocal</span> <span class="kd">extends</span> <span class="n">ThreadLocal</span><span class="o">{</span>
     <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="kd">super</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
-        <span class="n">service</span><span class="o">.</span><span class="na">service2</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">Service</span> <span class="n">service</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Service</span><span class="o">();</span><span class="c1">//two threads use the same service. 
-</span><span class="c1"></span>        <span class="n">MyThread</span> <span class="n">myThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
-        <span class="n">myThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-        <span class="n">MyThreadB</span> <span class="n">myThreadB</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThreadB</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
-        <span class="n">myThreadB</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div><p>解决方法：同步块并且对象监视器使用不同对象。一个方法对应一个对象监视器，做到单个方法的同步（锁住单个方法）。</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Service</span> <span class="o">{</span>
-    <span class="n">Object</span> <span class="n">object</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service1</span><span class="o">(){</span>
-        <span class="kd">synchronized</span><span class="o">(</span><span class="n">object</span><span class="o">){</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;service1&#34;</span><span class="o">);</span>
-            <span class="k">while</span> <span class="o">(</span><span class="kc">true</span><span class="o">){</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;ha&#34;</span><span class="o">);</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-    <span class="n">Object</span> <span class="n">object1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service2</span><span class="o">(){</span>
-        <span class="kd">synchronized</span> <span class="o">(</span><span class="n">object1</span><span class="o">){</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;service2&#34;</span><span class="o">);</span>
-        <span class="o">}</span>
+    <span class="kd">protected</span> <span class="n">Object</span> <span class="nf">initialValue</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="s">&#34;fine&#34;</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div><div class="gdoc-page__anchorwrap">
-    <h2 id="3-多线程死锁">
-        3. 多线程死锁
-        <a data-clipboard-text="http://example.org/2.%E5%AF%B9%E8%B1%A1%E5%8F%8A%E5%8F%98%E9%87%8F%E7%9A%84%E5%B9%B6%E5%8F%91%E8%AE%BF%E9%97%AE/2.2%E5%90%8C%E6%AD%A5%E4%B8%AD%E7%9A%84%E6%97%A0%E9%99%90%E7%AD%89%E5%BE%85/#3-多线程死锁" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 3. 多线程死锁" href="#3-%e5%a4%9a%e7%ba%bf%e7%a8%8b%e6%ad%bb%e9%94%81">
+    <h2 id="2inheritablethreadlocal">
+        2.InheritableThreadLocal
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.5%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F%E7%A7%81%E6%9C%89/#2inheritablethreadlocal" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 2.InheritableThreadLocal" href="#2inheritablethreadlocal">
             <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
         </a>
     </h2>
-</div><p>死锁条件：</p>
+</div><p><code>public static ThreadLocal t = new InheritableThreadLocal();</code></p>
+<div class="gdoc-page__anchorwrap">
+    <h3 id="线程值继承">
+        线程值继承
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.5%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F%E7%A7%81%E6%9C%89/#线程值继承" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 线程值继承" href="#%e7%ba%bf%e7%a8%8b%e5%80%bc%e7%bb%a7%e6%89%bf">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h3>
+</div><p><strong>当前线程的值，第一次访问(set 或者 get)之后才生效，才可被继承。</strong></p>
 <ul>
-<li>互斥(一份资源同时只能供一个线程使用)</li>
-<li>占有且等待</li>
-<li>不可抢占</li>
-<li>循环等待</li>
-</ul>
-<p>以下举例了 4 秒钟的死锁，线程占有的时间越长，死锁时间越长。</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">DealThread</span> <span class="kd">implements</span> <span class="n">Runnable</span><span class="o">{</span>
-    <span class="kd">public</span> <span class="n">String</span> <span class="n">username</span><span class="o">;</span>
-    <span class="kd">public</span> <span class="n">Object</span> <span class="n">lock1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
-    <span class="kd">public</span> <span class="n">Object</span> <span class="n">lock2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Object</span><span class="o">();</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setFlag</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">username</span> <span class="o">=</span> <span class="n">username</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">username</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;a&#34;</span><span class="o">)){</span>
-            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">lock1</span><span class="o">){</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;username: &#34;</span> <span class="o">+</span> <span class="n">username</span><span class="o">);</span>
-                <span class="k">try</span><span class="o">{</span>
-                    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">4000</span><span class="o">);</span><span class="c1">//4 second dead lock
-</span><span class="c1"></span>                <span class="o">}</span><span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
-                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-                <span class="o">}</span>
-            <span class="o">}</span>
-            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">lock2</span><span class="o">){</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;lock2 username: &#34;</span>  <span class="o">+</span> <span class="n">username</span><span class="o">);</span>
-            <span class="o">}</span>
-        <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">username</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="s">&#34;b&#34;</span><span class="o">)){</span>
-            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">lock2</span><span class="o">){</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;username: &#34;</span> <span class="o">+</span> <span class="n">username</span><span class="o">);</span>
-                <span class="k">try</span><span class="o">{</span>
-                    <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">4000</span><span class="o">);</span><span class="c1">//4 second dead lock
-</span><span class="c1"></span>                <span class="o">}</span><span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
-                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
-                <span class="o">}</span>
-            <span class="o">}</span>
-            <span class="kd">synchronized</span> <span class="o">(</span><span class="n">lock1</span><span class="o">){</span>
-                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;lock1 username: &#34;</span>  <span class="o">+</span> <span class="n">username</span><span class="o">);</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
+<li>
+<p>父线程的值被访问过之后，子线程可以继承父线程的值，但子线程值修改(set)对父线程没有影响。</p>
+</li>
+<li>
+<p>若父线程的值未被访问，子线程访问所得到的值是默认值。</p>
+<details>
+<summary>子线程访问到的是默认值</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="n">ThreadLocal</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyInheritableThreadLocal</span><span class="o">();</span>
 
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+      <span class="n">MyThread</span> <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">();</span>
+      <span class="n">s</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+  <span class="o">}</span>
 <span class="o">}</span>
-</code></pre></div>
+</code></pre></div><p>运行结果</p>
+<blockquote>
+<p>fine</p>
+</blockquote>
+</details>
+<details>
+<summary>父线程的值有被访问，则子线程会继承</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+  <span class="kd">public</span> <span class="kd">static</span> <span class="n">ThreadLocal</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyInheritableThreadLocal</span><span class="o">();</span>
+
+  <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+
+      <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">t</span><span class="o">.</span><span class="na">get</span><span class="o">());</span><span class="c1">//父线程的值有被访问
+</span><span class="c1"></span>      <span class="n">MyThread</span> <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">();</span>
+      <span class="n">s</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>运行结果</p>
+<blockquote>
+<p>fine<br>fineHa</p>
+</blockquote>
+</details>
+</li>
+<li>
+<p>父线程修改了值，并且执行了其他语句之后，子线程再来继承所得到的值就是新的值。</p>
+</li>
+<li>
+<p>如果在子线程获取值的时候，父线程修改了值，那么子线程获取到的是旧的值。</p>
+</li>
+<li>
+<p>若想要在继承的同时对子线程的值进行修改，可以重写 childValue 方法。</p>
+<details>
+<summary>MyInheritableThreadLocal.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java">  <span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyInheritableThreadLocal</span> <span class="kd">extends</span> <span class="n">InheritableThreadLocal</span><span class="o">{</span>
+  <span class="nd">@Override</span>
+  <span class="kd">protected</span> <span class="n">Object</span> <span class="nf">initialValue</span><span class="o">(){</span>
+      <span class="k">return</span> <span class="s">&#34;fine&#34;</span><span class="o">;</span>
+  <span class="o">}</span>
+  <span class="nd">@Override</span>
+  <span class="kd">protected</span> <span class="n">Object</span> <span class="nf">childValue</span><span class="o">(</span><span class="n">Object</span> <span class="n">parentValue</span><span class="o">){</span>
+      <span class="k">return</span> <span class="n">parentValue</span> <span class="o">+</span> <span class="s">&#34;Ha&#34;</span><span class="o">;</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+</li>
+</ul>
+
     </article>
 
                 
