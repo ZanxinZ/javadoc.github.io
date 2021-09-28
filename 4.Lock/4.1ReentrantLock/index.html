@@ -10,13 +10,12 @@
 
 
 
-    <meta name="description" content="以 Thread 实例的方式    Mythread.java
-package threadTest; public class MyThread extends Thread{ @Override public void run(){ super.run(); for (int i = 0; i &lt; 100; i&#43;&#43;){ System.out.println(&#34;MyThread:&#34; &#43; i); } } } Main.java
-package threadTest; public class main { public static void main(String[] args){ MyThread myThread = new MyThread(); myThread.start(); MyThread myThread1 = new MyThread(); myThread1.start(); System.out.println(&#34;Has been ran&#34;); } } 以包装 Runnable 的方式    因为 Runnable 接口中只有 run 方法，无法启动一个新的线程。所以借由 Thread 的构造，可以新建线程。">
+    <meta name="description" content="ReentrantLock 可重入锁
+ 嗅探锁定 多路分支通知  1. 实现同步功能     实现互斥   MyService.java import java.util.concurrent.locks.Lock; import java.util.concurrent.locks.ReentrantLock; public class MyService { private Lock lock = new ReentrantLock(); public void service(){ lock.lock(); System.out.println(Thread.currentThread().getName()); for (int i = 0; i &lt; 20; i&#43;&#43;) { System.out.print(i); } System.out.println(); lock.unlock(); } }   MyThread.java public class MyThread extends Thread{ MyService service; public MyThread(MyService service){ this.service = service; } @Override public void run(){ service.">
 
 
 
-    <title>1.1线程新建 | 技术学习笔记</title>
+    <title>4.1ReentrantLock | 技术学习笔记</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -159,7 +158,7 @@ package threadTest; public class main { public static void main(String[] args){ 
             
             
                 <span class="flex">
-                    <a href="/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/1.1%E6%96%B0%E5%BB%BA%E7%BA%BF%E7%A8%8B/" class="gdoc-nav__entry is-active">
+                    <a href="/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/1.1%E6%96%B0%E5%BB%BA%E7%BA%BF%E7%A8%8B/" class="gdoc-nav__entry ">
                         1.1线程新建
                     </a>
                 </span>
@@ -497,7 +496,7 @@ package threadTest; public class main { public static void main(String[] args){ 
             
             
                 <span class="flex">
-                    <a href="/4.Lock/4.1ReentrantLock/" class="gdoc-nav__entry ">
+                    <a href="/4.Lock/4.1ReentrantLock/" class="gdoc-nav__entry is-active">
                         4.1ReentrantLock
                     </a>
                 </span>
@@ -627,7 +626,7 @@ package threadTest; public class main { public static void main(String[] args){ 
         
     
     
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/' href='/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/'><span itemprop='name'>1.多线程的使用</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>1.1线程新建</span><meta itemprop='position' content='3' /></li>
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/4.lock/' href='/4.lock/'><span itemprop='name'>4.Lock</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>4.1ReentrantLock</span><meta itemprop='position' content='3' /></li>
     
 
     
@@ -642,82 +641,159 @@ package threadTest; public class main { public static void main(String[] args){ 
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>1.1线程新建</h1>
-        <div class="gdoc-page__anchorwrap">
-    <h2 id="以-thread-实例的方式">
-        以 Thread 实例的方式
-        <a data-clipboard-text="http://example.org/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/1.1%E6%96%B0%E5%BB%BA%E7%BA%BF%E7%A8%8B/#以-thread-实例的方式" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 以 Thread 实例的方式" href="#%e4%bb%a5-thread-%e5%ae%9e%e4%be%8b%e7%9a%84%e6%96%b9%e5%bc%8f">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><p>Mythread.java</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">threadTest</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="kd">super</span><span class="o">.</span><span class="na">run</span><span class="o">();</span>
-        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">100</span><span class="o">;</span> <span class="n">i</span><span class="o">++){</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;MyThread:&#34;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div><p>Main.java</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">threadTest</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">main</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
-        <span class="n">MyThread</span> <span class="n">myThread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">();</span>
-        <span class="n">myThread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-        <span class="n">MyThread</span> <span class="n">myThread1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">();</span>
-        <span class="n">myThread1</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Has been ran&#34;</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div><div class="gdoc-page__anchorwrap">
-    <h2 id="以包装-runnable-的方式">
-        以包装 Runnable 的方式
-        <a data-clipboard-text="http://example.org/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/1.1%E6%96%B0%E5%BB%BA%E7%BA%BF%E7%A8%8B/#以包装-runnable-的方式" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 以包装 Runnable 的方式" href="#%e4%bb%a5%e5%8c%85%e8%a3%85-runnable-%e7%9a%84%e6%96%b9%e5%bc%8f">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><p>因为 Runnable 接口中只有 run 方法，无法启动一个新的线程。所以借由 Thread 的构造，可以新建线程。</p>
-<p>Runnable.java</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">threadTest</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyRunnable</span> <span class="kd">implements</span> <span class="n">Runnable</span><span class="o">{</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Runnable&#34;</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div><p>Run.java</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">threadTest</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">Runnable</span> <span class="n">runnable</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyRunnable</span><span class="o">();</span>
-        <span class="n">Thread</span> <span class="n">thread</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="o">(</span><span class="n">runnable</span><span class="o">);</span>   <span class="c1">//runnable has no &#39;start&#39; method, so use thread to decorate(compact).
-</span><span class="c1"></span>        <span class="n">thread</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;done&#34;</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div><div class="gdoc-page__anchorwrap">
-    <h2 id="start-与-run-的区别">
-        start() 与 run() 的区别
-        <a data-clipboard-text="http://example.org/1.%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%9A%84%E4%BD%BF%E7%94%A8/1.1%E6%96%B0%E5%BB%BA%E7%BA%BF%E7%A8%8B/#start-与-run-的区别" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor start() 与 run() 的区别" href="#start-%e4%b8%8e-run-%e7%9a%84%e5%8c%ba%e5%88%ab">
+        <h1>4.1ReentrantLock</h1>
+        <p>ReentrantLock 可重入锁</p>
+<ul>
+<li>嗅探锁定</li>
+<li>多路分支通知</li>
+</ul>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="1-实现同步功能">
+        1. 实现同步功能
+        <a data-clipboard-text="http://example.org/4.Lock/4.1ReentrantLock/#1-实现同步功能" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 1. 实现同步功能" href="#1-%e5%ae%9e%e7%8e%b0%e5%90%8c%e6%ad%a5%e5%8a%9f%e8%83%bd">
             <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
         </a>
     </h2>
 </div><ul>
-<li>
-<p>调用 start() 是通知<strong>线程规划器</strong>，目标线程已经准备好了，线程规划器可以安排一个时间来启动目标线程，属于异步执行。</p>
-</li>
-<li>
-<p>调用 run() 时，是直接执行对应的目标线程的代码段，执行完 run() 中的代码才会继续下一步，属于同步执行。</p>
-</li>
+<li>实现互斥</li>
 </ul>
+<details>
+<summary>MyService.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Lock</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantLock</span><span class="o">;</span>
 
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyService</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">Lock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">service</span><span class="o">(){</span>
+        <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">20</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">print</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">();</span>
+        <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<details>
+<summary>MyThread.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="n">MyService</span> <span class="n">service</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">MyThread</span><span class="o">(</span><span class="n">MyService</span> <span class="n">service</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">service</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<details>
+<summary>Run.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">MyService</span> <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyService</span><span class="o">();</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">5</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">MyThread</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+            <span class="n">t</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;Thread&#34;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+            <span class="n">t</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<p>运行结果</p>
+<p><img src="/%e5%a4%9a%e7%ba%bf%e7%a8%8b/4.ReentrantLock/%e5%8f%af%e9%87%8d%e5%85%a5%e9%94%81_%e5%90%8c%e6%ad%a5.png" alt=""  /></p>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="2-waitnotify-的实现">
+        2. wait/notify 的实现、
+        <a data-clipboard-text="http://example.org/4.Lock/4.1ReentrantLock/#2-waitnotify-的实现" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 2. wait/notify 的实现、" href="#2-waitnotify-%e7%9a%84%e5%ae%9e%e7%8e%b0">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>synchronized 与 wait() 和 notity()/notifyAll()方法的结合可以实现『等待/通知』模式。</p>
+<p>ReentrantLock 与 Condition 也可实现同样的功能。</p>
+<p>在一个 Lock 对象中可以创建多个 Condition 对象。线程对象可以注册在指定的 Condition 中，实现有选择性的线程通知。</p>
+<p>调用 condition.await() 之前需要先获取锁。</p>
+<p>线程被 await() 挂起之后，interrupt() 也会引起 InterruptedException.</p>
+<p>await(long time, TimeUnit unit) 可以设定挂起时间。</p>
+<div class="gdoc-page__anchorwrap">
+    <h3 id="reentrantlock-与-condition">
+        ReentrantLock 与 condition
+        <a data-clipboard-text="http://example.org/4.Lock/4.1ReentrantLock/#reentrantlock-与-condition" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor ReentrantLock 与 condition" href="#reentrantlock-%e4%b8%8e-condition">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h3>
+</div><p>ReentrantLock 的 await 与 condition 的 signal</p>
+<details>
+<summary>MyService.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Condition</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Lock</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantLock</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyService</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">Lock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">();</span>
+    <span class="kd">private</span>  <span class="n">Condition</span> <span class="n">condition</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">await</span><span class="o">(){</span>
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span><span class="c1">//需要先获取锁
+</span><span class="c1"></span>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Ready&#34;</span><span class="o">);</span>
+            <span class="n">condition</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">());</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">signal</span><span class="o">(){</span>
+        <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+        <span class="n">condition</span><span class="o">.</span><span class="na">signal</span><span class="o">();</span>
+        <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<details>
+<summary>MyThread.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="n">MyService</span> <span class="n">service</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">MyThread</span><span class="o">(</span><span class="n">MyService</span> <span class="n">service</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></details>
+<details>
+<summary>Run.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">MyService</span> <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyService</span><span class="o">();</span>
+        <span class="n">MyThread</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+        <span class="n">t</span><span class="o">.</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;Ha&#34;</span><span class="o">);</span>
+        <span class="n">t</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">1000</span><span class="o">);</span>
+        <span class="n">s</span><span class="o">.</span><span class="na">signal</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></details>
+<p>运行结果</p>
+<blockquote>
+<p>Ready<br>
+Ha</p>
+</blockquote>
+<p>先显示 Ready，等待 1 秒之后挂起的线程被通知，打印 Ha。</p>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="3-生产者消费者模式">
+        3. 生产者消费者模式
+        <a data-clipboard-text="http://example.org/4.Lock/4.1ReentrantLock/#3-生产者消费者模式" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 3. 生产者消费者模式" href="#3-%e7%94%9f%e4%ba%a7%e8%80%85%e6%b6%88%e8%b4%b9%e8%80%85%e6%a8%a1%e5%bc%8f">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div>
     </article>
 
                 

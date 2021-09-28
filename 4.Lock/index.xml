@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>4.Lock on 技术学习笔记</title>
+    <link>http://example.org/4.lock/</link>
+    <description>Recent content in 4.Lock on 技术学习笔记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 28 Sep 2021 16:38:33 +0800</lastBuildDate><atom:link href="http://example.org/4.lock/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>4.1ReentrantLock</title>
+      <link>http://example.org/4.Lock/4.1ReentrantLock/</link>
+      <pubDate>Tue, 28 Sep 2021 16:38:33 +0800</pubDate>
+      
+      <guid>http://example.org/4.Lock/4.1ReentrantLock/</guid>
+      <description>ReentrantLock 可重入锁
+ 嗅探锁定 多路分支通知  1. 实现同步功能     实现互斥   MyService.java import java.util.concurrent.locks.Lock; import java.util.concurrent.locks.ReentrantLock; public class MyService { private Lock lock = new ReentrantLock(); public void service(){ lock.lock(); System.out.println(Thread.currentThread().getName()); for (int i = 0; i &amp;lt; 20; i++) { System.out.print(i); } System.out.println(); lock.unlock(); } }   MyThread.java public class MyThread extends Thread{ MyService service; public MyThread(MyService service){ this.service = service; } @Override public void run(){ service.</description>
+    </item>
+    
+  </channel>
+</rss>
