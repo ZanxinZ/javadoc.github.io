@@ -787,6 +787,113 @@ Ha</p>
 </blockquote>
 <p>先显示 Ready，等待 1 秒之后挂起的线程被通知，打印 Ha。</p>
 <div class="gdoc-page__anchorwrap">
+    <h3 id="多个-condition-通知部分线程">
+        多个 Condition 通知部分线程
+        <a data-clipboard-text="http://example.org/4.Lock/4.1ReentrantLock/#多个-condition-通知部分线程" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 多个 Condition 通知部分线程" href="#%e5%a4%9a%e4%b8%aa-condition-%e9%80%9a%e7%9f%a5%e9%83%a8%e5%88%86%e7%ba%bf%e7%a8%8b">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h3>
+</div><details>
+<summary>MyService.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Condition</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantLock</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyService</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">ReentrantLock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">();</span>
+    <span class="kd">private</span> <span class="n">Condition</span> <span class="n">conditionA</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span><span class="c1">// Object monitor
+</span><span class="c1"></span>    <span class="kd">private</span> <span class="n">Condition</span> <span class="n">conditionB</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span><span class="c1">// Object monitor
+</span><span class="c1"></span>    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">awaitA</span><span class="o">(){</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;A start&#34;</span><span class="o">);</span>
+            <span class="n">conditionA</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;A end&#34;</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">awaitB</span><span class="o">(){</span>
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;B start&#34;</span><span class="o">);</span>
+            <span class="n">conditionB</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;B end&#34;</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span><span class="k">finally</span><span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">signalA</span><span class="o">(){</span>
+        <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+        <span class="n">conditionA</span><span class="o">.</span><span class="na">signal</span><span class="o">();</span>
+        <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">signalB</span><span class="o">(){</span>
+        <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+        <span class="n">conditionB</span><span class="o">.</span><span class="na">signal</span><span class="o">();</span>
+        <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<details>
+<summary>ThreadA.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadA</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+
+    <span class="n">MyService</span> <span class="n">service</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">ThreadA</span><span class="o">(</span><span class="n">MyService</span> <span class="n">service</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">awaitA</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></details>
+<details>
+<summary>ThreadB.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadB</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="n">MyService</span> <span class="n">service</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">ThreadB</span><span class="o">(</span><span class="n">MyService</span> <span class="n">service</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">awaitB</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></details>
+<details>
+<summary>Run.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+        <span class="n">MyService</span> <span class="n">s</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyService</span><span class="o">();</span>
+        <span class="n">ThreadA</span> <span class="n">A</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadA</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+        <span class="n">ThreadB</span> <span class="n">B</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadB</span><span class="o">(</span><span class="n">s</span><span class="o">);</span>
+        <span class="n">A</span><span class="o">.</span><span class="na">start</span><span class="o">();</span><span class="c1">//线程 A 将会被 ConditionA 挂起
+</span><span class="c1"></span>        <span class="n">B</span><span class="o">.</span><span class="na">start</span><span class="o">();</span><span class="c1">//线程 B 将会被 ConditionB 挂起
+</span><span class="c1"></span>        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">1000</span><span class="o">);</span>
+        <span class="n">s</span><span class="o">.</span><span class="na">signalA</span><span class="o">();</span>
+        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">1000</span><span class="o">);</span>
+        <span class="n">s</span><span class="o">.</span><span class="na">signalB</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<p>运行结果</p>
+<blockquote>
+<p>A start<br>
+B start<br>
+A end<br>
+B end<br></p>
+</blockquote>
+<div class="gdoc-page__anchorwrap">
     <h2 id="3-生产者消费者模式">
         3. 生产者消费者模式
         <a data-clipboard-text="http://example.org/4.Lock/4.1ReentrantLock/#3-生产者消费者模式" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 3. 生产者消费者模式" href="#3-%e7%94%9f%e4%ba%a7%e8%80%85%e6%b6%88%e8%b4%b9%e8%80%85%e6%a8%a1%e5%bc%8f">
