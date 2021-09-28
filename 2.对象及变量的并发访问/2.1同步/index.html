@@ -668,7 +668,7 @@ public class MyObject { private String userName = &#34;A&#34;; private String pa
 <li>每个对象都具有锁性质。</li>
 <li>synchronized 默认锁住的是对象</li>
 <li>synchronized(object) 是使用对象监视器来实现同步，使用的锁是 object 的锁。</li>
-<li>锁是一个线程对另外一个线程之间的关系，自己线程对自己线程的资源访问不涉及锁。</li>
+<li>锁是一个线程与一个同步监视器（锁对象）之间的关系，对象自己作为锁时『synchronized(this)』，自己线程对锁（自身）的访问也涉及锁。不同线程间不加 synchronized 则认为是异步调用。</li>
 </ul>
 
     </article>
