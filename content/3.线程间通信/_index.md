@@ -6,5 +6,6 @@ draft: true
 
 - wait/notify 
 - 生产者/消费者模式
+- 管道流 PipedOutputStream, PipedInputStream
 - join
 - ThreadLocal

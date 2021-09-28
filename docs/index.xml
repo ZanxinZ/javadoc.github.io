@@ -8,6 +8,16 @@
     <language>en-us</language>
     <lastBuildDate>Wed, 08 Sep 2021 00:44:56 +0800</lastBuildDate><atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>4.1ReentrantLock</title>
+      <link>http://example.org/4.Lock/4.1ReentrantLock/</link>
+      <pubDate>Tue, 28 Sep 2021 16:38:33 +0800</pubDate>
+      
+      <guid>http://example.org/4.Lock/4.1ReentrantLock/</guid>
+      <description>ReentrantLock 可重入锁
+ 嗅探锁定 多路分支通知  1. 实现同步功能     实现互斥   MyService.java import java.util.concurrent.locks.Lock; import java.util.concurrent.locks.ReentrantLock; public class MyService { private Lock lock = new ReentrantLock(); public void service(){ lock.lock(); System.out.println(Thread.currentThread().getName()); for (int i = 0; i &amp;lt; 20; i++) { System.out.print(i); } System.out.println(); lock.unlock(); } }   MyThread.java public class MyThread extends Thread{ MyService service; public MyThread(MyService service){ this.service = service; } @Override public void run(){ service.</description>
+    </item>
+    
+    <item>
       <title>3.5线程变量私有</title>
       <link>http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.5%E7%BA%BF%E7%A8%8B%E5%8F%98%E9%87%8F%E7%A7%81%E6%9C%89/</link>
       <pubDate>Tue, 28 Sep 2021 15:35:10 +0800</pubDate>
