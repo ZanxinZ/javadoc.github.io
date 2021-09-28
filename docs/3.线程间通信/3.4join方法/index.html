@@ -707,6 +707,104 @@
 B 服务<br>
 B 结束<br></p>
 </blockquote>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="join-后面的内容提前执行">
+        join 后面的内容提前执行
+        <a data-clipboard-text="http://example.org/3.%E7%BA%BF%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1/3.4join%E6%96%B9%E6%B3%95/#join-后面的内容提前执行" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor join 后面的内容提前执行" href="#join-%e5%90%8e%e9%9d%a2%e7%9a%84%e5%86%85%e5%ae%b9%e6%8f%90%e5%89%8d%e6%89%a7%e8%a1%8c">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><details>
+<summary>ThreadA.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadA</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="n">ThreadB</span> <span class="n">b</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">ThreadA</span><span class="o">(</span><span class="n">ThreadB</span> <span class="n">b</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="k">try</span> <span class="o">{</span>
+           <span class="kd">synchronized</span> <span class="o">(</span><span class="n">b</span><span class="o">){</span>
+               <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;A start&#34;</span><span class="o">);</span>
+               <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">5000</span><span class="o">);</span><span class="c1">//不释放锁，主线程无法访问 b
+</span><span class="c1"></span>               <span class="c1">//b.wait();//会释放锁
+</span><span class="c1"></span>               <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;A end&#34;</span><span class="o">);</span>
+           <span class="o">}</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">){</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<details>
+<summary>ThreadB.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadB</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">synchronized</span> <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;B start&#34;</span><span class="o">);</span>
+            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">6000</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;B end&#34;</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<details>
+<summary>Run.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">ThreadB</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadB</span><span class="o">();</span>
+        <span class="n">ThreadA</span> <span class="n">a</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadA</span><span class="o">(</span><span class="n">b</span><span class="o">);</span>
+
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">a</span><span class="o">.</span><span class="na">start</span><span class="o">();</span><span class="c1">//一旦线程 a 进入 run，会占有 b 锁并且不释放。
+</span><span class="c1"></span>            <span class="n">b</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+            <span class="n">b</span><span class="o">.</span><span class="na">join</span><span class="o">(</span><span class="n">4000</span><span class="o">);</span><span class="c1">//这一行比前面两个 start 都要早执行，主线程阻塞等待 b 线程 4000ms。
+</span><span class="c1"></span>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;Main end&#34;</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<p>执行顺序</p>
+<p>运行结果有三种可能</p>
+<ol>
+<li></li>
+</ol>
+<ul>
+<li>b.join(4000) 先拿到锁并且很快释放。</li>
+<li>a 拿到锁，开始执行，不释放锁。持续 5000ms。</li>
+<li>b.join(4000) 比线程 b 先拿到锁，但很快又释放，但此时已经过了 4000ms ，于是主线程不再阻塞，继续执行打印 Main end。</li>
+<li>b.start() 拿到锁就开始执行，不释放锁。持续 6000ms。</li>
+</ul>
+<blockquote>
+<p>A start<br>A end<br>Main end<br>B start<br>B end</p>
+</blockquote>
+<ol start="2">
+<li>和第一种情况一样，只是 ThreadB 在争夺锁的时候比 Main end 的打印快了一点。</li>
+</ol>
+<ul>
+<li>Main end 和『B 开始』异步打印，Main end 慢了一点。</li>
+</ul>
+<blockquote>
+<p>A start<br>A end<br>B start<br>Main end<br>B end</p>
+</blockquote>
+<ol start="3">
+<li></li>
+</ol>
+<ul>
+<li>b.join(4000) 先拿到锁并且很快释放。</li>
+<li>a 拿到锁，开始执行，不释放锁。持续 5000ms。</li>
+<li>线程 b 比 b.join(4000) 先拿到锁，不释放锁，持续 6000ms。然后输出『结束』</li>
+<li>b.join(4000) 再次拿到锁。时间已经超过 4000ms, 主线程不再等待，打印 Main end。</li>
+</ul>
+<blockquote>
+<p>A start<br>A end<br>B start<br>B end<br>Main end</p>
+</blockquote>
 
     </article>
 
