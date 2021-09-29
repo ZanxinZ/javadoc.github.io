@@ -10,7 +10,7 @@
 
 
 
-    <meta name="description" content="技术学习笔记">
+    <meta name="description" content="可重入锁     ReentrantLock 与 Condition 配合实现互斥同步。 await/signal 等待通知模式 生产者消费者模式  多个消费者多个生产者：一个生产者通知所有消费者，一个消费者通知所有生产者。『signalAll()』 一个生产者一个消费者：一个生产者通知一个消费者，一个消费者通知一个生产者。『signal()』    ">
 
 
 
@@ -35,7 +35,7 @@
 <link rel="preload" href="/custom.css" as="style">
 <link rel="stylesheet" href="/custom.css" media="all">
 
-<link rel="alternate" type="application/rss+xml" href="http://example.org/4.lock/index.xml" title="技术学习笔记" />
+<link rel="alternate" type="application/rss+xml" href="http://example.org/4.Lock/index.xml" title="技术学习笔记" />
 
 
 <!-- Made with Geekdoc theme https://github.com/thegeeklab/hugo-geekdoc -->
@@ -472,7 +472,11 @@
             <li>
             
             
-                <span class="flex">4.Lock</span>
+                <span class="flex">
+                    <a href="/4.Lock/" class="gdoc-nav__entry is-active">
+                        4.Lock
+                    </a>
+                </span>
             
             
 
@@ -634,7 +638,24 @@
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
         <h1>4.Lock</h1>
-        
+        <div class="gdoc-page__anchorwrap">
+    <h2 id="可重入锁">
+        可重入锁
+        <a data-clipboard-text="http://example.org/4.Lock/#可重入锁" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 可重入锁" href="#%e5%8f%af%e9%87%8d%e5%85%a5%e9%94%81">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><ul>
+<li>ReentrantLock 与 Condition 配合实现互斥同步。</li>
+<li>await/signal 等待通知模式</li>
+<li>生产者消费者模式
+<ul>
+<li>多个消费者多个生产者：一个生产者通知所有消费者，一个消费者通知所有生产者。『signalAll()』</li>
+<li>一个生产者一个消费者：一个生产者通知一个消费者，一个消费者通知一个生产者。『signal()』</li>
+</ul>
+</li>
+</ul>
+
     </article>
 
                 
