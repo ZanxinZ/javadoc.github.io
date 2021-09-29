@@ -511,6 +511,30 @@
             </li>
             
             
+            
+
+            
+            
+            
+            
+            
+            
+
+            <li>
+            
+            
+                <span class="flex">
+                    <a href="/4.Lock/4.2ReentrantReadWriteLock/" class="gdoc-nav__entry ">
+                        4.2 ReentrantReadWriteLock
+                    </a>
+                </span>
+            
+            
+
+            
+            </li>
+            
+            
         
     </ul>
 
@@ -904,7 +928,14 @@ B end<br></p>
             <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
         </a>
     </h2>
-</div><div class="gdoc-page__anchorwrap">
+</div><p>生产者消费者模式下，产品生产一个便可消费一个。当线程一对一的时候，每次生产消费都是由这两个线程执行的。当线程多对多的时候，每次生产消费的执行不会是由特定的两个线程承包，而是各个线程都有机会来履行职责。比如 P1、P2、C1、C2，P1 生产的产品，可由 C1 或 C2来消费；而 C1 消费的产品，可能来自 P1 或者 P2。</p>
+<p>condition 作为线程监视器，可以绑定多个线程。</p>
+<p>以下代码中，conditionP 绑定的是ThreadP， conditionC 绑定的是 ThreadC。</p>
+<ul>
+<li>conditionP.signal() 随机通知一个ThreadP，conditionC.signal() 随机通知一个ThreadC。</li>
+<li>conditionP.signalAll() 通知的是所有ThreadP，conditionC.signalAll() 通知的是所有ThreadC。</li>
+</ul>
+<div class="gdoc-page__anchorwrap">
     <h3 id="多生产者多消费者若使用两个-condition-和-signalall">
         多生产者多消费者，若使用两个 Condition 和 signalAll()
         <a data-clipboard-text="http://example.org/4.Lock/4.1ReentrantLock/#多生产者多消费者若使用两个-condition-和-signalall" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 多生产者多消费者，若使用两个 Condition 和 signalAll()" href="#%e5%a4%9a%e7%94%9f%e4%ba%a7%e8%80%85%e5%a4%9a%e6%b6%88%e8%b4%b9%e8%80%85%e8%8b%a5%e4%bd%bf%e7%94%a8%e4%b8%a4%e4%b8%aa-condition-%e5%92%8c-signalall">
@@ -1061,7 +1092,7 @@ B end<br></p>
 </div><p>多生产者和多消费者中，生产一个消费一个。生产一个产品之后只通知一人，消费一个产品之后只通知一人。</p>
 <p>只需把以上代码中的 signalAll() 改为 signal()。</p>
 <p>执行结果：多生产者与多消费者交替打印。生产一个打印一个。 conditionP.signal() 通知的时候在多个生产者线程中随机唤醒一个来生产。conditionC.signal() 通知的时候在多个消费者线程中随机唤醒一个来消费。</p>
-<p><strong>这这种方式效率最好。</strong></p>
+<p><strong>这种方式效率最好。</strong></p>
 <div class="gdoc-page__anchorwrap">
     <h3 id="一个生产者一个消费者若使用一个-conditionsignal">
         一个生产者一个消费者，若使用一个 Condition，signal()
@@ -1070,6 +1101,224 @@ B end<br></p>
         </a>
     </h3>
 </div><p>执行结果：一个生产者和一个消费者交替打印。</p>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="4公平锁和非公平锁">
+        4.公平锁和非公平锁
+        <a data-clipboard-text="http://example.org/4.Lock/4.1ReentrantLock/#4公平锁和非公平锁" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 4.公平锁和非公平锁" href="#4%e5%85%ac%e5%b9%b3%e9%94%81%e5%92%8c%e9%9d%9e%e5%85%ac%e5%b9%b3%e9%94%81">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>公平锁</p>
+<blockquote>
+<p>lock = new ReentrantLock(true);</p>
+</blockquote>
+<p>非公平锁</p>
+<blockquote>
+<p>lock = new ReentrantLock(false);</p>
+</blockquote>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="5使用-condition-加一个控制变量可以同步各类线程的执行顺序">
+        5.使用 Condition 加一个控制变量，可以同步各类线程的执行顺序
+        <a data-clipboard-text="http://example.org/4.Lock/4.1ReentrantLock/#5使用-condition-加一个控制变量可以同步各类线程的执行顺序" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 5.使用 Condition 加一个控制变量，可以同步各类线程的执行顺序" href="#5%e4%bd%bf%e7%94%a8-condition-%e5%8a%a0%e4%b8%80%e4%b8%aa%e6%8e%a7%e5%88%b6%e5%8f%98%e9%87%8f%e5%8f%af%e4%bb%a5%e5%90%8c%e6%ad%a5%e5%90%84%e7%b1%bb%e7%ba%bf%e7%a8%8b%e7%9a%84%e6%89%a7%e8%a1%8c%e9%a1%ba%e5%ba%8f">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>设定一个控制变量 nextPrint ，当前线程未轮到打印时则挂起，若可以执行则执行并且通知下一位（把nextPrint的值改变）。</p>
+<p>顺序是：A 执行，A 通知 B；B 执行，B 通知 C；C 执行，C 通知 A。</p>
+<details>
+<summary>Service.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.Condition</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantLock</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Service</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="n">ReentrantLock</span> <span class="n">lock</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">Condition</span> <span class="n">conditionA</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">Condition</span> <span class="n">conditionB</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="n">Condition</span> <span class="n">conditionC</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">nextPrint</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">Service</span><span class="o">(</span><span class="n">ReentrantLock</span> <span class="n">lock</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">lock</span> <span class="o">=</span> <span class="n">lock</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">conditionA</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">conditionB</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">conditionC</span> <span class="o">=</span> <span class="n">lock</span><span class="o">.</span><span class="na">newCondition</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">serviceA</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">nextPrint</span> <span class="o">!=</span> <span class="n">1</span><span class="o">){</span>
+                <span class="n">conditionA</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">3</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; &#34;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">conditionB</span><span class="o">.</span><span class="na">signalAll</span><span class="o">();</span>
+            <span class="n">nextPrint</span> <span class="o">=</span> <span class="n">2</span><span class="o">;</span>
+
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span><span class="k">finally</span><span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">serviceB</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">nextPrint</span> <span class="o">!=</span> <span class="n">2</span><span class="o">){</span>
+                <span class="n">conditionB</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">3</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; &#34;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">conditionC</span><span class="o">.</span><span class="na">signalAll</span><span class="o">();</span>
+            <span class="n">nextPrint</span> <span class="o">=</span> <span class="n">3</span><span class="o">;</span>
+
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span><span class="k">finally</span><span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">serviceC</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">lock</span><span class="o">();</span>
+            <span class="k">while</span><span class="o">(</span><span class="n">nextPrint</span> <span class="o">!=</span> <span class="n">3</span><span class="o">){</span>
+                <span class="n">conditionC</span><span class="o">.</span><span class="na">await</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">3</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; &#34;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">conditionA</span><span class="o">.</span><span class="na">signal</span><span class="o">();</span>
+            <span class="n">nextPrint</span> <span class="o">=</span> <span class="n">1</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span><span class="k">finally</span><span class="o">{</span>
+            <span class="n">lock</span><span class="o">.</span><span class="na">unlock</span><span class="o">();</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<details>
+<summary>ThreadA.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadA</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">ThreadA</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">serviceA</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<details>
+<summary>ThreadB.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadB</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">ThreadB</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">serviceB</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></details>
+<details>
+<summary>ThreadC.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadC</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="kd">private</span> <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">ThreadC</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="n">service</span><span class="o">.</span><span class="na">serviceC</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></details>
+<details>
+<summary>Run.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantLock</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">ReentrantLock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantLock</span><span class="o">();</span>
+        <span class="n">Service</span> <span class="n">service</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Service</span><span class="o">(</span><span class="n">lock</span><span class="o">);</span>
+        <span class="n">ThreadA</span><span class="o">[]</span> <span class="n">threadA</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadA</span><span class="o">[</span><span class="n">5</span><span class="o">];</span>
+        <span class="n">ThreadB</span><span class="o">[]</span> <span class="n">threadB</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadB</span><span class="o">[</span><span class="n">5</span><span class="o">];</span>
+        <span class="n">ThreadC</span><span class="o">[]</span> <span class="n">threadC</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadC</span><span class="o">[</span><span class="n">5</span><span class="o">];</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">5</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">threadA</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadA</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
+            <span class="n">threadB</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadB</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
+            <span class="n">threadC</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadC</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
+            <span class="n">threadA</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;A&#34;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+            <span class="n">threadB</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;B&#34;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+            <span class="n">threadC</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">setName</span><span class="o">(</span><span class="s">&#34;C&#34;</span> <span class="o">+</span> <span class="n">i</span><span class="o">);</span>
+            <span class="n">threadA</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
+            <span class="n">threadB</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
+            <span class="n">threadC</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">start</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<p>执行结果为，A、B、C  三类线程依次按顺序执行，严格按照ABC的顺序。</p>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="其他方法">
+        其他方法
+        <a data-clipboard-text="http://example.org/4.Lock/4.1ReentrantLock/#其他方法" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 其他方法" href="#%e5%85%b6%e4%bb%96%e6%96%b9%e6%b3%95">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><ul>
+<li>
+<p>lock.getHoldCount() 查询当前线程保持此锁的个数。</p>
+</li>
+<li>
+<p>lock.getQueueLength() 当前在等待锁释放的线程数。只能得到大致的数字，用于系统状态监视，不能用作同步。</p>
+</li>
+<li>
+<p>lock.getWaitQueueLength(Condition condition) 获取与 condition 相关联且处于等待状态的线程估计数。</p>
+</li>
+<li>
+<p>lock.hasQueueThread(Thread thread) 查询指定线程是否正在等待获取此锁定。</p>
+</li>
+<li>
+<p>lock.hasQueueThreads() 查询是否有线程正在等待获取此锁定。</p>
+</li>
+<li>
+<p>lock.hasQueueWaiters(Condition condition) 查询是否有线程正在等待与此锁定有关的 condition。</p>
+</li>
+<li>
+<p>lock.isFair() 判断是否为公平锁，ReentrantLock 默认是非公平锁。</p>
+</li>
+<li>
+<p>lock.isHeldByCurrentThread() 查询当前线程是否持有该锁定。</p>
+</li>
+<li>
+<p>lock.isLocked()</p>
+</li>
+<li>
+<p>lock.lockInterruptibly() 如果当前线程未被中断，则获取锁，如果当前线程已经被中断，则出现异常。</p>
+</li>
+<li>
+<p>lock.tryLock() 仅在调用时锁定未被其他线程保持的情况下，才获取该锁。</p>
+</li>
+<li>
+<p>lock.tryLock(long timeout, TimeUnit unit) 如果锁定在给定时间内没有被其他线程保持，且当前线程未中断，则获取该锁的锁定。</p>
+</li>
+<li>
+<p>condition.awaitUniterruptruptibly()  进行无视中断异常的等待，在等待过程中，线程中断不会触发异常，锁的保持状态仍然继续保持，直到被通知。</p>
+</li>
+<li>
+<p>condition.awaitUntil(Date deadline) 线程有限时间的挂起。在时间到达之前可以被其他线程唤醒，在时间到达之后自我唤醒。</p>
+</li>
+</ul>
 
     </article>
 

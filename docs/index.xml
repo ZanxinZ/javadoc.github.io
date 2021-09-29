@@ -8,6 +8,17 @@
     <language>en-us</language>
     <lastBuildDate>Wed, 08 Sep 2021 00:44:56 +0800</lastBuildDate><atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>4.2 ReentrantReadWriteLock</title>
+      <link>http://example.org/4.Lock/4.2ReentrantReadWriteLock/</link>
+      <pubDate>Wed, 29 Sep 2021 21:24:17 +0800</pubDate>
+      
+      <guid>http://example.org/4.Lock/4.2ReentrantReadWriteLock/</guid>
+      <description>读写锁包括共享锁（读）、排他锁（写）。
+没有线程进行写入操作时，多个读取线程都可以获得锁，而进行写入操作的线程只有获得写入锁才能写入。
+ 读读共享 写写互斥 读写互斥 写读互斥  读读共享     Service.java import java.util.concurrent.locks.ReentrantReadWriteLock; public class Service { private ReentrantReadWriteLock lock; public Service(ReentrantReadWriteLock lock){ this.lock = lock; } public void read(){ lock.readLock().lock(); System.out.println(Thread.currentThread().getName() + &amp;#34; &amp;#34; +System.currentTimeMillis()); lock.readLock().unlock(); } }   ThreadA.java public class ThreadA extends Thread{ private Service service; public ThreadA(Service service){ this.service = service; } @Override public void run(){ service.read(); } }   ThreadB.java public class ThreadB extends Thread{ private Service service; public ThreadB(Service service){ this.</description>
+    </item>
+    
+    <item>
       <title>4.1ReentrantLock</title>
       <link>http://example.org/4.Lock/4.1ReentrantLock/</link>
       <pubDate>Tue, 28 Sep 2021 16:38:33 +0800</pubDate>
