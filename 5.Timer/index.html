@@ -783,7 +783,7 @@ public class Run { public static Timer timer = new Timer(); public static class 
 <p>定时任务1时间到 1632966052416<br>
 定时任务2时间到 1632966058433</p>
 </blockquote>
-<p>其中，任务 1 执行耗时 6000ms，任务的优先级别是以加入 schedule 的早晚为标准的（task 加入 schedule 队列），而 timer 是单个线程，所以任务 2 需要等待任务 1 执行完毕才开始判断当前系统时间与设定的时间之间的关系，设定时间已到或者过期就执行，设定时间未到就等待。</p>
+<p>其中，任务 1 执行耗时 6000ms，任务的优先级别是以加入 schedule 的早晚为标准的（task 加入 schedule 队列），而 timer 是单个线程，所以任务 2 需要等待任务 1 执行完毕才开始判断上一次任务的开始时间与当前任务设定的时间之间的关系，设定时间已到或者过期就执行，设定时间未到就等待。</p>
 </details>
 <div class="gdoc-page__anchorwrap">
     <h3 id="scheduletimertask-task-date-time-long-period">
@@ -792,7 +792,51 @@ public class Run { public static Timer timer = new Timer(); public static class 
             <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
         </a>
     </h3>
-</div>
+</div><p>『定时循环任务』</p>
+<p>一旦时间到达 time，则按照 period 间隔循环执行 task。</p>
+<blockquote>
+<p>timer.schedule(task,time,period);</p>
+</blockquote>
+<p>『cancel』</p>
+<ul>
+<li>
+<p>task.cancel()
+取消任务本身。</p>
+</li>
+<li>
+<p>timer.cancel()
+取消 timer 所绑定的所有任务，并且 timer 线程结束。</p>
+<p>有时 cancel 方法没有抢到 queue 锁，则定时器取消不成功，各个任务照常执行。</p>
+</li>
+</ul>
+<div class="gdoc-page__anchorwrap">
+    <h3 id="scheduletimertask-task-long-delay">
+        schedule(TimerTask task, long delay)
+        <a data-clipboard-text="http://example.org/5.Timer/#scheduletimertask-task-long-delay" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor schedule(TimerTask task, long delay)" href="#scheduletimertask-task-long-delay">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h3>
+</div><p>以当前系统时间为基准，延时 delay 时间执行 task。</p>
+<div class="gdoc-page__anchorwrap">
+    <h3 id="scheduletimertask-task-long-delaylong-period">
+        schedule(TimerTask task, long delay，long period)
+        <a data-clipboard-text="http://example.org/5.Timer/#scheduletimertask-task-long-delaylong-period" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor schedule(TimerTask task, long delay，long period)" href="#scheduletimertask-task-long-delaylong-period">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h3>
+</div><p>以当前系统时间为基准，延时 delay 时间执行 task，且往后每隔 period 的时间间隔都会执行 task。</p>
+<div class="gdoc-page__anchorwrap">
+    <h3 id="schedule-与-scheduleatfixedrate-的区别">
+        schedule 与 scheduleAtFixedRate 的区别
+        <a data-clipboard-text="http://example.org/5.Timer/#schedule-与-scheduleatfixedrate-的区别" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor schedule 与 scheduleAtFixedRate 的区别" href="#schedule-%e4%b8%8e-scheduleatfixedrate-%e7%9a%84%e5%8c%ba%e5%88%ab">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h3>
+</div><ul>
+<li>schedule 当前任务时间是否抵达是以上一次任务的开始时间为基准。</li>
+<li>scheduleAtFixedRate 当前任务时间是否抵达是以上一次任务的结束时间为基准。</li>
+</ul>
+
     </article>
 
                 
