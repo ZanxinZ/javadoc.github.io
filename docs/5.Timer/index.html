@@ -10,11 +10,14 @@
 
 
 
-    <meta name="description" content="可重入锁     ReentrantLock 与 Condition 配合实现互斥同步。 await/signal 等待通知模式 生产者消费者模式  多个消费者多个生产者：一个生产者通知所有消费者，一个消费者通知所有生产者。『signalAll()』 一个生产者一个消费者：一个生产者通知一个消费者，一个消费者通知一个生产者。『signal()』    ">
+    <meta name="description" content="Timer    Timer 类负责计划任务
+可以使用抽象类 TimerTask的子类进行业务编写。
+Schedule(TimerTask task, Date date)     设置定时任务 Run.java
+public class Run { public static Timer timer = new Timer(); public static class MyTask extends TimerTask{ @Override public void run() { System.out.println(&#34;定时任务时间到&#34;); } } public static void main(String[] args) { try{ MyTask task = new MyTask(); SimpleDateFormat sdf = new SimpleDateFormat(&#34;yyyy-MM-dd HH:mm:ss&#34;); Date date = sdf.parse(&#34;2021-09-30 09:14:00&#34;); timer.schedule(task, date); }catch (ParseException e){ } } } 运行结果：在设定的时间打印了“定时任务时间到”。">
 
 
 
-    <title>4.Lock | 技术学习笔记</title>
+    <title>5.Timer | 技术学习笔记</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -35,7 +38,7 @@
 <link rel="preload" href="/custom.css" as="style">
 <link rel="stylesheet" href="/custom.css" media="all">
 
-<link rel="alternate" type="application/rss+xml" href="http://example.org/4.Lock/index.xml" title="技术学习笔记" />
+<link rel="alternate" type="application/rss+xml" href="http://example.org/5.Timer/index.xml" title="技术学习笔记" />
 
 
 <!-- Made with Geekdoc theme https://github.com/thegeeklab/hugo-geekdoc -->
@@ -473,7 +476,7 @@
             
             
                 <span class="flex">
-                    <a href="/4.Lock/" class="gdoc-nav__entry is-active">
+                    <a href="/4.Lock/" class="gdoc-nav__entry ">
                         4.Lock
                     </a>
                 </span>
@@ -555,7 +558,7 @@
             
             
                 <span class="flex">
-                    <a href="/5.Timer/" class="gdoc-nav__entry ">
+                    <a href="/5.Timer/" class="gdoc-nav__entry is-active">
                         5.Timer
                     </a>
                 </span>
@@ -672,7 +675,7 @@
         
     
     
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>4.Lock</span><meta itemprop='position' content='2' /></li>
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>5.Timer</span><meta itemprop='position' content='2' /></li>
     
 
     
@@ -685,25 +688,111 @@
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>4.Lock</h1>
+        <h1>5.Timer</h1>
         <div class="gdoc-page__anchorwrap">
-    <h2 id="可重入锁">
-        可重入锁
-        <a data-clipboard-text="http://example.org/4.Lock/#可重入锁" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 可重入锁" href="#%e5%8f%af%e9%87%8d%e5%85%a5%e9%94%81">
+    <h2 id="timer">
+        Timer
+        <a data-clipboard-text="http://example.org/5.Timer/#timer" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor Timer" href="#timer">
             <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
         </a>
     </h2>
-</div><ul>
-<li>ReentrantLock 与 Condition 配合实现互斥同步。</li>
-<li>await/signal 等待通知模式</li>
-<li>生产者消费者模式
-<ul>
-<li>多个消费者多个生产者：一个生产者通知所有消费者，一个消费者通知所有生产者。『signalAll()』</li>
-<li>一个生产者一个消费者：一个生产者通知一个消费者，一个消费者通知一个生产者。『signal()』</li>
-</ul>
-</li>
-</ul>
+</div><p>Timer 类负责计划任务</p>
+<p>可以使用抽象类 TimerTask的子类进行业务编写。</p>
+<div class="gdoc-page__anchorwrap">
+    <h3 id="scheduletimertask-task-date-date">
+        Schedule(TimerTask task, Date date)
+        <a data-clipboard-text="http://example.org/5.Timer/#scheduletimertask-task-date-date" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor Schedule(TimerTask task, Date date)" href="#scheduletimertask-task-date-date">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h3>
+</div><details>
+<summary>设置定时任务</summary>
+<p>Run.java</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Timer</span> <span class="n">timer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timer</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MyTask</span> <span class="kd">extends</span> <span class="n">TimerTask</span><span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;定时任务时间到&#34;</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
 
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">MyTask</span> <span class="n">task</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyTask</span><span class="o">();</span>
+            <span class="n">SimpleDateFormat</span> <span class="n">sdf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="o">(</span><span class="s">&#34;yyyy-MM-dd HH:mm:ss&#34;</span><span class="o">);</span>
+            <span class="n">Date</span> <span class="n">date</span> <span class="o">=</span> <span class="n">sdf</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">&#34;2021-09-30 09:14:00&#34;</span><span class="o">);</span>
+            <span class="n">timer</span><span class="o">.</span><span class="na">schedule</span><span class="o">(</span><span class="n">task</span><span class="o">,</span> <span class="n">date</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">ParseException</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div><p>运行结果：在设定的时间打印了“定时任务时间到”。</p>
+<p>其中 timer 新启动了一个线程，主线程结束时，子线程仍然继续运行。为了使得子程序伴随主程序的结束而结束，可以将子线程设置为守护线程👇</p>
+<p><code> public static Timer timer = new Timer(true);</code></p>
+</details>
+<details>
+<summary>当任务 task 有多个的时候，它们是按照与 schedule 的绑定顺序来进入计划队列的。</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.text.ParseException</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.text.SimpleDateFormat</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Date</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Timer</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.util.TimerTask</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Timer</span> <span class="n">timer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timer</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MyTask</span> <span class="kd">extends</span> <span class="n">TimerTask</span><span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;定时任务1时间到 &#34;</span> <span class="o">+</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+            <span class="k">try</span> <span class="o">{</span>
+                <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">6000</span><span class="o">);</span>
+            <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MyTask2</span> <span class="kd">extends</span> <span class="n">TimerTask</span><span class="o">{</span>
+        <span class="nd">@Override</span>
+        <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;定时任务2时间到 &#34;</span> <span class="o">+</span> <span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
+
+        <span class="o">}</span>
+    <span class="o">}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">MyTask</span> <span class="n">task</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyTask</span><span class="o">();</span>
+            <span class="n">MyTask2</span> <span class="n">task2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyTask2</span><span class="o">();</span>
+            <span class="n">SimpleDateFormat</span> <span class="n">sdf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SimpleDateFormat</span><span class="o">(</span><span class="s">&#34;yyyy-MM-dd HH:mm:ss&#34;</span><span class="o">);</span>
+            <span class="n">Date</span> <span class="n">date</span> <span class="o">=</span> <span class="n">sdf</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">&#34;2021-09-30 09:37:00&#34;</span><span class="o">);</span>
+            <span class="n">Date</span> <span class="n">date2</span> <span class="o">=</span> <span class="n">sdf</span><span class="o">.</span><span class="na">parse</span><span class="o">(</span><span class="s">&#34;2021-09-30 09:37:05&#34;</span><span class="o">);</span>
+            <span class="n">timer</span><span class="o">.</span><span class="na">schedule</span><span class="o">(</span><span class="n">task</span><span class="o">,</span> <span class="n">date</span><span class="o">);</span>
+            <span class="n">timer</span><span class="o">.</span><span class="na">schedule</span><span class="o">(</span><span class="n">task2</span><span class="o">,</span> <span class="n">date2</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">ParseException</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div><p>运行结果</p>
+<blockquote>
+<p>定时任务1时间到 1632966052416<br>
+定时任务2时间到 1632966058433</p>
+</blockquote>
+<p>其中，任务 1 执行耗时 6000ms，任务的优先级别是以加入 schedule 的早晚为标准的（task 加入 schedule 队列），而 timer 是单个线程，所以任务 2 需要等待任务 1 执行完毕才开始判断当前系统时间与设定的时间之间的关系，设定时间已到或者过期就执行，设定时间未到就等待。</p>
+</details>
+<div class="gdoc-page__anchorwrap">
+    <h3 id="scheduletimertask-task-date-time-long-period">
+        schedule(TimerTask task, Date time, long period)
+        <a data-clipboard-text="http://example.org/5.Timer/#scheduletimertask-task-date-time-long-period" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor schedule(TimerTask task, Date time, long period)" href="#scheduletimertask-task-date-time-long-period">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h3>
+</div>
     </article>
 
                 

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>5.Timer on 技术学习笔记</title>
+    <link>http://example.org/5.Timer/</link>
+    <description>Recent content in 5.Timer on 技术学习笔记</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 30 Sep 2021 08:36:57 +0800</lastBuildDate><atom:link href="http://example.org/5.Timer/index.xml" rel="self" type="application/rss+xml" />
+  </channel>
+</rss>
