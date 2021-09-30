@@ -8,6 +8,27 @@
     <language>en-us</language>
     <lastBuildDate>Wed, 08 Sep 2021 00:44:56 +0800</lastBuildDate><atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>6.2其他方法实现单例模式</title>
+      <link>http://example.org/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.2%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</link>
+      <pubDate>Thu, 30 Sep 2021 20:08:30 +0800</pubDate>
+      
+      <guid>http://example.org/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.2%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/</guid>
+      <description>静态内部类实现单例     MyObject.java public class MyObject { private static class MyObjectHandler{ private static MyObject myObject = new MyObject(); } private MyObject(){} public static MyObject getInstance(){ return MyObjectHandler.myObject; } }   序列化与反序列化的单例模式    静态实现的单例对象，在序列化和反序列化时会出现违背单例的情况。
+解决方法是，在单例类定义中添加 readResolve 代码段:
+//静态属性 protected Object readResolve(){ System.out.println(&amp;#34;调用了 readResolve&amp;#34;); return MyObject.myObject; } 或
+//静态内部类 protected Object readResolve(){ System.out.println(&amp;#34;调用了 readResolve&amp;#34;); return MyObjectHandler.myObject; }  MyObject.java import java.io.Serializable; public class MyObject implements Serializable { private static class MyObjectHandler{ private static MyObject myObject = new MyObject(); } private MyObject(){} public static MyObject getInstance(){ return MyObjectHandler.</description>
+    </item>
+    
+    <item>
+      <title>6.1立即加载与延迟加载</title>
+      <link>http://example.org/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.1%E7%AB%8B%E5%8D%B3%E5%8A%A0%E8%BD%BD%E4%B8%8E%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD/</link>
+      <pubDate>Thu, 30 Sep 2021 18:58:55 +0800</pubDate>
+      
+      <guid>http://example.org/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.1%E7%AB%8B%E5%8D%B3%E5%8A%A0%E8%BD%BD%E4%B8%8E%E5%BB%B6%E8%BF%9F%E5%8A%A0%E8%BD%BD/</guid>
+      <description>立即加载     MyObject.java public class MyObject { private static MyObject myObject = new MyObject(); private MyObject(){} public static MyObject getInstance(){ //该方法未同步  return myObject; } }   MyThread.java public class MyThread extends Thread{ @Override public void run(){ System.out.println(MyObject.getInstance().hashCode()); } }   Run.java public class Run { public static void main(String[] args) { MyThread A = new MyThread(); MyThread B = new MyThread(); MyThread C = new MyThread(); A.</description>
+    </item>
+    
+    <item>
       <title>4.2 ReentrantReadWriteLock</title>
       <link>http://example.org/4.Lock/4.2ReentrantReadWriteLock/</link>
       <pubDate>Wed, 29 Sep 2021 21:24:17 +0800</pubDate>

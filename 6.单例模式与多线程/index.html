@@ -10,13 +10,11 @@
 
 
 
-    <meta name="description" content="读写锁包括共享锁（读）、排他锁（写）。
-没有线程进行写入操作时，多个读取线程都可以获得锁，而进行写入操作的线程只有获得写入锁才能写入。
- 读读共享 写写互斥 读写互斥 写读互斥  读读共享     Service.java import java.util.concurrent.locks.ReentrantReadWriteLock; public class Service { private ReentrantReadWriteLock lock; public Service(ReentrantReadWriteLock lock){ this.lock = lock; } public void read(){ lock.readLock().lock(); System.out.println(Thread.currentThread().getName() &#43; &#34; &#34; &#43;System.currentTimeMillis()); lock.readLock().unlock(); } }   ThreadA.java public class ThreadA extends Thread{ private Service service; public ThreadA(Service service){ this.service = service; } @Override public void run(){ service.read(); } }   ThreadB.java public class ThreadB extends Thread{ private Service service; public ThreadB(Service service){ this.">
+    <meta name="description" content=" 立即加载 延迟加载 静态内置类实现单例模式 序列化与反序列化的单例模式 static 代码块实现单例模式 enum 实现单例模式  ">
 
 
 
-    <title>4.2 ReentrantReadWriteLock | 技术学习笔记</title>
+    <title>6.单例模式与多线程 | 技术学习笔记</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -37,6 +35,7 @@
 <link rel="preload" href="/custom.css" as="style">
 <link rel="stylesheet" href="/custom.css" media="all">
 
+<link rel="alternate" type="application/rss+xml" href="http://example.org/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/index.xml" title="技术学习笔记" />
 
 
 <!-- Made with Geekdoc theme https://github.com/thegeeklab/hugo-geekdoc -->
@@ -525,7 +524,7 @@
             
             
                 <span class="flex">
-                    <a href="/4.Lock/4.2ReentrantReadWriteLock/" class="gdoc-nav__entry is-active">
+                    <a href="/4.Lock/4.2ReentrantReadWriteLock/" class="gdoc-nav__entry ">
                         4.2 ReentrantReadWriteLock
                     </a>
                 </span>
@@ -580,7 +579,7 @@
             
             
                 <span class="flex">
-                    <a href="/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="gdoc-nav__entry ">
+                    <a href="/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="gdoc-nav__entry is-active">
                         6.单例模式与多线程
                     </a>
                 </span>
@@ -755,15 +754,7 @@
         
     
     
-        
-        
-        
-        
-    
-    
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/4.Lock/' href='/4.Lock/'><span itemprop='name'>4.Lock</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>4.2 ReentrantReadWriteLock</span><meta itemprop='position' content='3' /></li>
-    
-
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>6.单例模式与多线程</span><meta itemprop='position' content='2' /></li>
     
 
     
@@ -776,207 +767,15 @@
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>4.2 ReentrantReadWriteLock</h1>
-        <p>读写锁包括共享锁（读）、排他锁（写）。</p>
-<p>没有线程进行写入操作时，多个读取线程都可以获得锁，而进行写入操作的线程只有获得写入锁才能写入。</p>
-<ul>
-<li>读读共享</li>
-<li>写写互斥</li>
-<li>读写互斥</li>
-<li>写读互斥</li>
+        <h1>6.单例模式与多线程</h1>
+        <ul>
+<li>立即加载</li>
+<li>延迟加载</li>
+<li>静态内置类实现单例模式</li>
+<li>序列化与反序列化的单例模式</li>
+<li>static 代码块实现单例模式</li>
+<li>enum 实现单例模式</li>
 </ul>
-<div class="gdoc-page__anchorwrap">
-    <h2 id="读读共享">
-        读读共享
-        <a data-clipboard-text="http://example.org/4.Lock/4.2ReentrantReadWriteLock/#读读共享" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 读读共享" href="#%e8%af%bb%e8%af%bb%e5%85%b1%e4%ba%ab">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><details>
-<summary>Service.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantReadWriteLock</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Service</span> <span class="o">{</span>
-    <span class="kd">private</span> <span class="n">ReentrantReadWriteLock</span> <span class="n">lock</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="nf">Service</span><span class="o">(</span><span class="n">ReentrantReadWriteLock</span> <span class="n">lock</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">lock</span> <span class="o">=</span> <span class="n">lock</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">read</span><span class="o">(){</span>
-        <span class="n">lock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; &#34;</span> <span class="o">+</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
-        <span class="n">lock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></details>
-<details>
-<summary>ThreadA.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadA</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
-    <span class="kd">private</span> <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="nf">ThreadA</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="n">service</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></details>
-<details>
-<summary>ThreadB.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadB</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
-    <span class="kd">private</span> <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="nf">ThreadB</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="n">service</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-
-</code></pre></div></details>
-<details>
-<summary>Run.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantReadWriteLock</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">ReentrantReadWriteLock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="o">();</span>
-        <span class="n">Service</span> <span class="n">service</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Service</span><span class="o">(</span><span class="n">lock</span><span class="o">);</span>
-        <span class="n">ThreadA</span> <span class="n">A</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadA</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
-        <span class="n">ThreadB</span> <span class="n">B</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadB</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
-        <span class="n">A</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-        <span class="n">B</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-
-</code></pre></div></details>
-<p>执行结果</p>
-<blockquote>
-<p>Thread-0 1632923125926<br>
-Thread-1 1632923125926</p>
-</blockquote>
-<p>两个线程打印的间隔时间很短，几乎同时访问共享锁锁住的内容，这样的共享锁可以提高程序的运行效率。</p>
-<div class="gdoc-page__anchorwrap">
-    <h2 id="写写互斥">
-        写写互斥
-        <a data-clipboard-text="http://example.org/4.Lock/4.2ReentrantReadWriteLock/#写写互斥" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 写写互斥" href="#%e5%86%99%e5%86%99%e4%ba%92%e6%96%a5">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><p>把读锁换成写锁 lock.writeLock.lock()，则 A B两个线程执行 service.read() 进行的是写锁（排他锁）。</p>
-<p>运行结果：</p>
-<blockquote>
-<p>Thread-0 1632923636440<br>
-Thread-1 1632923636451</p>
-</blockquote>
-<p>可以发现两个线程打印的间隔较长（单位毫秒）。</p>
-<div class="gdoc-page__anchorwrap">
-    <h2 id="读写互斥">
-        读写互斥
-        <a data-clipboard-text="http://example.org/4.Lock/4.2ReentrantReadWriteLock/#读写互斥" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 读写互斥" href="#%e8%af%bb%e5%86%99%e4%ba%92%e6%96%a5">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><details>
-<summary>Service.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantReadWriteLock</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Service</span> <span class="o">{</span>
-    <span class="kd">private</span> <span class="n">ReentrantReadWriteLock</span> <span class="n">lock</span><span class="o">;</span>
-    <span class="kd">public</span> <span class="nf">Service</span><span class="o">(</span><span class="n">ReentrantReadWriteLock</span> <span class="n">lock</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">lock</span> <span class="o">=</span> <span class="n">lock</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">read</span><span class="o">(){</span>
-        <span class="k">try</span><span class="o">{</span>
-            <span class="n">lock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;read:&#34;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; &#34;</span> <span class="o">+</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
-            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">3000</span><span class="o">);</span>
-        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
-        <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
-            <span class="n">lock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">write</span><span class="o">(){</span>
-        <span class="k">try</span> <span class="o">{</span>
-            <span class="n">lock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;write:&#34;</span><span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; &#34;</span> <span class="o">+</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
-            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">3000</span><span class="o">);</span>
-        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
-        <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
-            <span class="n">lock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
-        <span class="o">}</span>
-
-    <span class="o">}</span>
-<span class="o">}</span>
-
-</code></pre></div></details>
-<details>
-<summary>ThreadA.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadA</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
-    <span class="kd">private</span> <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="nf">ThreadA</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="n">service</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></details>
-<details>
-<summary>ThreadB.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadB</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
-    <span class="kd">private</span> <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="nf">ThreadB</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="n">service</span><span class="o">.</span><span class="na">write</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-
-</code></pre></div></details>
-<details>
-<summary>Run.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
-        <span class="n">ReentrantReadWriteLock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="o">();</span>
-        <span class="n">Service</span> <span class="n">service</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Service</span><span class="o">(</span><span class="n">lock</span><span class="o">);</span>
-        <span class="n">ThreadA</span> <span class="n">A</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadA</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
-        <span class="n">ThreadB</span> <span class="n">B</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadB</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
-        <span class="n">A</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">1000</span><span class="o">);</span>
-        <span class="n">B</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></details>
-<p>运行结果：</p>
-<blockquote>
-<p>read:Thread-0 1632924236688<br>
-write:Thread-1 1632924239709</p>
-</blockquote>
-<p>线程 A 在读取时，线程 B 想要写入，二者之间是互斥的。</p>
-<div class="gdoc-page__anchorwrap">
-    <h2 id="写读互斥">
-        写读互斥
-        <a data-clipboard-text="http://example.org/4.Lock/4.2ReentrantReadWriteLock/#写读互斥" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 写读互斥" href="#%e5%86%99%e8%af%bb%e4%ba%92%e6%96%a5">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><p>将 Run.java 中的 线程 A 和线程 B 的执行顺序颠倒，也会产生互斥。</p>
-<blockquote>
-<p>A.start();<br>
-Thread.sleep(1000);<br>
-B.start();<br></p>
-</blockquote>
 
     </article>
 
