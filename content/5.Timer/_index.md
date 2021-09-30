@@ -105,8 +105,33 @@ public class Run {
 >定时任务1时间到 1632966052416<br>
 >定时任务2时间到 1632966058433
 
-其中，任务 1 执行耗时 6000ms，任务的优先级别是以加入 schedule 的早晚为标准的（task 加入 schedule 队列），而 timer 是单个线程，所以任务 2 需要等待任务 1 执行完毕才开始判断当前系统时间与设定的时间之间的关系，设定时间已到或者过期就执行，设定时间未到就等待。
+其中，任务 1 执行耗时 6000ms，任务的优先级别是以加入 schedule 的早晚为标准的（task 加入 schedule 队列），而 timer 是单个线程，所以任务 2 需要等待任务 1 执行完毕才开始判断上一次任务的开始时间与当前任务设定的时间之间的关系，设定时间已到或者过期就执行，设定时间未到就等待。
 </details>
 
 ### schedule(TimerTask task, Date time, long period)
+『定时循环任务』
 
+一旦时间到达 time，则按照 period 间隔循环执行 task。
+> timer.schedule(task,time,period);
+
+『cancel』
+- task.cancel()
+  取消任务本身。
+- timer.cancel()
+  取消 timer 所绑定的所有任务，并且 timer 线程结束。
+
+  有时 cancel 方法没有抢到 queue 锁，则定时器取消不成功，各个任务照常执行。
+
+### schedule(TimerTask task, long delay)
+
+以当前系统时间为基准，延时 delay 时间执行 task。
+
+### schedule(TimerTask task, long delay，long period)
+
+以当前系统时间为基准，延时 delay 时间执行 task，且往后每隔 period 的时间间隔都会执行 task。
+
+
+### schedule 与 scheduleAtFixedRate 的区别
+
+- schedule 当前任务时间是否抵达是以上一次任务的开始时间为基准。
+- scheduleAtFixedRate 当前任务时间是否抵达是以上一次任务的结束时间为基准。
