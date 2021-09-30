@@ -133,5 +133,61 @@ public class Run {
 
 ### schedule 与 scheduleAtFixedRate 的区别
 
-- schedule 当前任务时间是否抵达是以上一次任务的开始时间为基准。
-- scheduleAtFixedRate 当前任务时间是否抵达是以上一次任务的结束时间为基准。
+- schedule 当前任务时间是否抵达是以上一次任务的**开始时间**为基准。
+- scheduleAtFixedRate 当前任务时间是否抵达是以上一次任务的**结束时间**为基准。
+
+scheduleAtFixedRate(TimerTask task, long time, long period)
+
+
+### 追赶性
+
+当周期性执行时，设定的 time 提前当前一段时间（向上取整 n 个周期），scheduleAtFixedRate() 会根据周期来决定补全执行 n 次。
+
+
+schedule() 不具有追赶性。
+
+![](/多线程/5.Timer/无追赶.png)
+
+<details>
+<summary>scheduleAtFixedRate() 具有追赶性。</summary>
+
+```java
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class Run {
+    public static Timer timer = new Timer();
+    public static int runCount = 0;
+    public static class MyTask extends TimerTask{
+        @Override
+        public void run() {
+            System.out.println("定时任务1时间到 " + System.currentTimeMillis());
+        }
+    }
+
+    public static void main(String[] args) {
+
+        try{
+            MyTask task = new MyTask();
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = sdf.parse("2021-09-30 17:07:00");
+            System.out.println("Current time:" + System.currentTimeMillis());
+            timer.scheduleAtFixedRate(task, date,4000);
+        }catch (ParseException e){
+
+        }
+
+    }
+}
+```
+
+</details>
+
+
+![追赶执行](/多线程/5.Timer/追赶.png)
+
+
+

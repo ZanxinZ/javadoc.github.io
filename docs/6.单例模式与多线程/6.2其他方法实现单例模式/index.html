@@ -10,13 +10,14 @@
 
 
 
-    <meta name="description" content="读写锁包括共享锁（读）、排他锁（写）。
-没有线程进行写入操作时，多个读取线程都可以获得锁，而进行写入操作的线程只有获得写入锁才能写入。
- 读读共享 写写互斥 读写互斥 写读互斥  读读共享     Service.java import java.util.concurrent.locks.ReentrantReadWriteLock; public class Service { private ReentrantReadWriteLock lock; public Service(ReentrantReadWriteLock lock){ this.lock = lock; } public void read(){ lock.readLock().lock(); System.out.println(Thread.currentThread().getName() &#43; &#34; &#34; &#43;System.currentTimeMillis()); lock.readLock().unlock(); } }   ThreadA.java public class ThreadA extends Thread{ private Service service; public ThreadA(Service service){ this.service = service; } @Override public void run(){ service.read(); } }   ThreadB.java public class ThreadB extends Thread{ private Service service; public ThreadB(Service service){ this.">
+    <meta name="description" content="静态内部类实现单例     MyObject.java public class MyObject { private static class MyObjectHandler{ private static MyObject myObject = new MyObject(); } private MyObject(){} public static MyObject getInstance(){ return MyObjectHandler.myObject; } }   序列化与反序列化的单例模式    静态实现的单例对象，在序列化和反序列化时会出现违背单例的情况。
+解决方法是，在单例类定义中添加 readResolve 代码段:
+//静态属性 protected Object readResolve(){ System.out.println(&#34;调用了 readResolve&#34;); return MyObject.myObject; } 或
+//静态内部类 protected Object readResolve(){ System.out.println(&#34;调用了 readResolve&#34;); return MyObjectHandler.myObject; }  MyObject.java import java.io.Serializable; public class MyObject implements Serializable { private static class MyObjectHandler{ private static MyObject myObject = new MyObject(); } private MyObject(){} public static MyObject getInstance(){ return MyObjectHandler.">
 
 
 
-    <title>4.2 ReentrantReadWriteLock | 技术学习笔记</title>
+    <title>6.2其他方法实现单例模式 | 技术学习笔记</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -525,7 +526,7 @@
             
             
                 <span class="flex">
-                    <a href="/4.Lock/4.2ReentrantReadWriteLock/" class="gdoc-nav__entry is-active">
+                    <a href="/4.Lock/4.2ReentrantReadWriteLock/" class="gdoc-nav__entry ">
                         4.2 ReentrantReadWriteLock
                     </a>
                 </span>
@@ -631,7 +632,7 @@
             
             
                 <span class="flex">
-                    <a href="/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.2%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="gdoc-nav__entry ">
+                    <a href="/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.2%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" class="gdoc-nav__entry is-active">
                         6.2其他方法实现单例模式
                     </a>
                 </span>
@@ -761,7 +762,7 @@
         
     
     
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/4.Lock/' href='/4.Lock/'><span itemprop='name'>4.Lock</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>4.2 ReentrantReadWriteLock</span><meta itemprop='position' content='3' /></li>
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/' href='/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/'><span itemprop='name'>6.单例模式与多线程</span></a><meta itemprop='position' content='2' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>6.2其他方法实现单例模式</span><meta itemprop='position' content='3' /></li>
     
 
     
@@ -776,170 +777,58 @@
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>4.2 ReentrantReadWriteLock</h1>
-        <p>读写锁包括共享锁（读）、排他锁（写）。</p>
-<p>没有线程进行写入操作时，多个读取线程都可以获得锁，而进行写入操作的线程只有获得写入锁才能写入。</p>
-<ul>
-<li>读读共享</li>
-<li>写写互斥</li>
-<li>读写互斥</li>
-<li>写读互斥</li>
-</ul>
-<div class="gdoc-page__anchorwrap">
-    <h2 id="读读共享">
-        读读共享
-        <a data-clipboard-text="http://example.org/4.Lock/4.2ReentrantReadWriteLock/#读读共享" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 读读共享" href="#%e8%af%bb%e8%af%bb%e5%85%b1%e4%ba%ab">
+        <h1>6.2其他方法实现单例模式</h1>
+        <div class="gdoc-page__anchorwrap">
+    <h2 id="静态内部类实现单例">
+        静态内部类实现单例
+        <a data-clipboard-text="http://example.org/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.2%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/#静态内部类实现单例" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 静态内部类实现单例" href="#%e9%9d%99%e6%80%81%e5%86%85%e9%83%a8%e7%b1%bb%e5%ae%9e%e7%8e%b0%e5%8d%95%e4%be%8b">
             <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
         </a>
     </h2>
 </div><details>
-<summary>Service.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantReadWriteLock</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Service</span> <span class="o">{</span>
-    <span class="kd">private</span> <span class="n">ReentrantReadWriteLock</span> <span class="n">lock</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="nf">Service</span><span class="o">(</span><span class="n">ReentrantReadWriteLock</span> <span class="n">lock</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">lock</span> <span class="o">=</span> <span class="n">lock</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">read</span><span class="o">(){</span>
-        <span class="n">lock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
-        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; &#34;</span> <span class="o">+</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
-        <span class="n">lock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
+<summary>MyObject.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyObject</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MyObjectHandler</span><span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="n">MyObject</span> <span class="n">myObject</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyObject</span><span class="o">();</span>
+    <span class="o">}</span> 
+    <span class="kd">private</span> <span class="nf">MyObject</span><span class="o">(){}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">MyObject</span> <span class="nf">getInstance</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">MyObjectHandler</span><span class="o">.</span><span class="na">myObject</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></details>
-<details>
-<summary>ThreadA.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadA</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
-    <span class="kd">private</span> <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="nf">ThreadA</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="n">service</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></details>
-<details>
-<summary>ThreadB.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadB</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
-    <span class="kd">private</span> <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="nf">ThreadB</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="n">service</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-
-</code></pre></div></details>
-<details>
-<summary>Run.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantReadWriteLock</span><span class="o">;</span>
-
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">ReentrantReadWriteLock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="o">();</span>
-        <span class="n">Service</span> <span class="n">service</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Service</span><span class="o">(</span><span class="n">lock</span><span class="o">);</span>
-        <span class="n">ThreadA</span> <span class="n">A</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadA</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
-        <span class="n">ThreadB</span> <span class="n">B</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadB</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
-        <span class="n">A</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-        <span class="n">B</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-
-</code></pre></div></details>
-<p>执行结果</p>
-<blockquote>
-<p>Thread-0 1632923125926<br>
-Thread-1 1632923125926</p>
-</blockquote>
-<p>两个线程打印的间隔时间很短，几乎同时访问共享锁锁住的内容，这样的共享锁可以提高程序的运行效率。</p>
+<hr>
 <div class="gdoc-page__anchorwrap">
-    <h2 id="写写互斥">
-        写写互斥
-        <a data-clipboard-text="http://example.org/4.Lock/4.2ReentrantReadWriteLock/#写写互斥" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 写写互斥" href="#%e5%86%99%e5%86%99%e4%ba%92%e6%96%a5">
+    <h2 id="序列化与反序列化的单例模式">
+        序列化与反序列化的单例模式
+        <a data-clipboard-text="http://example.org/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.2%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/#序列化与反序列化的单例模式" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 序列化与反序列化的单例模式" href="#%e5%ba%8f%e5%88%97%e5%8c%96%e4%b8%8e%e5%8f%8d%e5%ba%8f%e5%88%97%e5%8c%96%e7%9a%84%e5%8d%95%e4%be%8b%e6%a8%a1%e5%bc%8f">
             <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
         </a>
     </h2>
-</div><p>把读锁换成写锁 lock.writeLock.lock()，则 A B两个线程执行 service.read() 进行的是写锁（排他锁）。</p>
-<p>运行结果：</p>
-<blockquote>
-<p>Thread-0 1632923636440<br>
-Thread-1 1632923636451</p>
-</blockquote>
-<p>可以发现两个线程打印的间隔较长（单位毫秒）。</p>
-<div class="gdoc-page__anchorwrap">
-    <h2 id="读写互斥">
-        读写互斥
-        <a data-clipboard-text="http://example.org/4.Lock/4.2ReentrantReadWriteLock/#读写互斥" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 读写互斥" href="#%e8%af%bb%e5%86%99%e4%ba%92%e6%96%a5">
-            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
-        </a>
-    </h2>
-</div><details>
-<summary>Service.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.util.concurrent.locks.ReentrantReadWriteLock</span><span class="o">;</span>
+</div><p>静态实现的单例对象，在序列化和反序列化时会出现违背单例的情况。</p>
+<p>解决方法是，在单例类定义中添加 readResolve 代码段:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="c1">//静态属性 
+</span><span class="c1"></span><span class="kd">protected</span> <span class="n">Object</span> <span class="nf">readResolve</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;调用了 readResolve&#34;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">MyObject</span><span class="o">.</span><span class="na">myObject</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></div><p>或</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="c1">//静态内部类
+</span><span class="c1"></span><span class="kd">protected</span> <span class="n">Object</span> <span class="nf">readResolve</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;调用了 readResolve&#34;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">MyObjectHandler</span><span class="o">.</span><span class="na">myObject</span><span class="o">;</span>
+    <span class="o">}</span>
+</code></pre></div><details>
+<summary>MyObject.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.io.Serializable</span><span class="o">;</span>
 
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Service</span> <span class="o">{</span>
-    <span class="kd">private</span> <span class="n">ReentrantReadWriteLock</span> <span class="n">lock</span><span class="o">;</span>
-    <span class="kd">public</span> <span class="nf">Service</span><span class="o">(</span><span class="n">ReentrantReadWriteLock</span> <span class="n">lock</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">lock</span> <span class="o">=</span> <span class="n">lock</span><span class="o">;</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyObject</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MyObjectHandler</span><span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="n">MyObject</span> <span class="n">myObject</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyObject</span><span class="o">();</span>
     <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">read</span><span class="o">(){</span>
-        <span class="k">try</span><span class="o">{</span>
-            <span class="n">lock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;read:&#34;</span> <span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; &#34;</span> <span class="o">+</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
-            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">3000</span><span class="o">);</span>
-        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
-        <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
-            <span class="n">lock</span><span class="o">.</span><span class="na">readLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">write</span><span class="o">(){</span>
-        <span class="k">try</span> <span class="o">{</span>
-            <span class="n">lock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">lock</span><span class="o">();</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;write:&#34;</span><span class="o">+</span> <span class="n">Thread</span><span class="o">.</span><span class="na">currentThread</span><span class="o">().</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34; &#34;</span> <span class="o">+</span><span class="n">System</span><span class="o">.</span><span class="na">currentTimeMillis</span><span class="o">());</span>
-            <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">3000</span><span class="o">);</span>
-        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">InterruptedException</span> <span class="n">e</span><span class="o">){</span>
-        <span class="o">}</span><span class="k">finally</span> <span class="o">{</span>
-            <span class="n">lock</span><span class="o">.</span><span class="na">writeLock</span><span class="o">().</span><span class="na">unlock</span><span class="o">();</span>
-        <span class="o">}</span>
-
-    <span class="o">}</span>
-<span class="o">}</span>
-
-</code></pre></div></details>
-<details>
-<summary>ThreadA.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadA</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
-    <span class="kd">private</span> <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="nf">ThreadA</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="n">service</span><span class="o">.</span><span class="na">read</span><span class="o">();</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</code></pre></div></details>
-<details>
-<summary>ThreadB.java</summary>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ThreadB</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
-    <span class="kd">private</span> <span class="n">Service</span> <span class="n">service</span><span class="o">;</span>
-
-    <span class="kd">public</span> <span class="nf">ThreadB</span><span class="o">(</span><span class="n">Service</span> <span class="n">service</span><span class="o">){</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">service</span> <span class="o">=</span> <span class="n">service</span><span class="o">;</span>
-    <span class="o">}</span>
-    <span class="nd">@Override</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
-        <span class="n">service</span><span class="o">.</span><span class="na">write</span><span class="o">();</span>
+    <span class="kd">private</span> <span class="nf">MyObject</span><span class="o">(){}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">MyObject</span> <span class="nf">getInstance</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">MyObjectHandler</span><span class="o">.</span><span class="na">myObject</span><span class="o">;</span>
     <span class="o">}</span>
 <span class="o">}</span>
 
@@ -947,36 +836,153 @@ Thread-1 1632923636451</p>
 <details>
 <summary>Run.java</summary>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
-        <span class="n">ReentrantReadWriteLock</span> <span class="n">lock</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ReentrantReadWriteLock</span><span class="o">();</span>
-        <span class="n">Service</span> <span class="n">service</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Service</span><span class="o">(</span><span class="n">lock</span><span class="o">);</span>
-        <span class="n">ThreadA</span> <span class="n">A</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadA</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
-        <span class="n">ThreadB</span> <span class="n">B</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ThreadB</span><span class="o">(</span><span class="n">service</span><span class="o">);</span>
-        <span class="n">A</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
-        <span class="n">Thread</span><span class="o">.</span><span class="na">sleep</span><span class="o">(</span><span class="n">1000</span><span class="o">);</span>
-        <span class="n">B</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">MyObject</span> <span class="n">myObject</span> <span class="o">=</span> <span class="n">MyObject</span><span class="o">.</span><span class="na">getInstance</span><span class="o">();</span>
+            <span class="n">FileOutputStream</span> <span class="n">fos</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileOutputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&#34;a.txt&#34;</span><span class="o">));</span>
+            <span class="n">ObjectOutputStream</span> <span class="n">oos</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectOutputStream</span><span class="o">(</span><span class="n">fos</span><span class="o">);</span>
+            <span class="n">oos</span><span class="o">.</span><span class="na">writeObject</span><span class="o">(</span><span class="n">myObject</span><span class="o">);</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">myObject</span><span class="o">.</span><span class="na">hashCode</span><span class="o">());</span>
+            <span class="n">oos</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+            <span class="n">fos</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
+
+        <span class="k">try</span><span class="o">{</span>
+            <span class="n">FileInputStream</span> <span class="n">fis</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileInputStream</span><span class="o">(</span><span class="k">new</span> <span class="n">File</span><span class="o">(</span><span class="s">&#34;a.txt&#34;</span><span class="o">));</span>
+            <span class="n">ObjectInputStream</span> <span class="n">ois</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ObjectInputStream</span><span class="o">(</span><span class="n">fis</span><span class="o">);</span>
+            <span class="n">MyObject</span> <span class="n">myObject</span> <span class="o">=</span> <span class="o">(</span><span class="n">MyObject</span><span class="o">)</span> <span class="n">ois</span><span class="o">.</span><span class="na">readObject</span><span class="o">();</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">myObject</span><span class="o">.</span><span class="na">hashCode</span><span class="o">());</span>
+            <span class="n">ois</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+            <span class="n">fis</span><span class="o">.</span><span class="na">close</span><span class="o">();</span>
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">IOException</span> <span class="n">e</span> <span class="o">){</span>
+
+        <span class="o">}</span><span class="k">catch</span> <span class="o">(</span><span class="n">ClassNotFoundException</span> <span class="n">e</span><span class="o">){</span>
+
+        <span class="o">}</span>
     <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></details>
-<p>运行结果：</p>
+<p>运行结果</p>
 <blockquote>
-<p>read:Thread-0 1632924236688<br>
-write:Thread-1 1632924239709</p>
+<p>1267032364<br>
+1598924227<br></p>
 </blockquote>
-<p>线程 A 在读取时，线程 B 想要写入，二者之间是互斥的。</p>
+<p><strong>使用的是静态内部类实现单例模式，但序列化写对象和反序列化读对象得到的却不是同一个，违背单例模式。</strong></p>
+<details>
+<summary>解决方法：修改 MyObject.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.io.Serializable</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyObject</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">MyObjectHandler</span><span class="o">{</span>
+        <span class="kd">private</span> <span class="kd">static</span> <span class="n">MyObject</span> <span class="n">myObject</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyObject</span><span class="o">();</span>
+    <span class="o">}</span>
+    <span class="kd">private</span> <span class="nf">MyObject</span><span class="o">(){}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">MyObject</span> <span class="nf">getInstance</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">MyObjectHandler</span><span class="o">.</span><span class="na">myObject</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">protected</span> <span class="n">Object</span> <span class="nf">readResolve</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;调用了 readResolve&#34;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">MyObjectHandler</span><span class="o">.</span><span class="na">myObject</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<p>修改之后运行结果显示，序列化对象和反序列化得到的对象是同一个对象。</p>
+<blockquote>
+<p>1267032364<br>
+调用了 readResolve<br>
+1267032364</p>
+</blockquote>
+<hr>
 <div class="gdoc-page__anchorwrap">
-    <h2 id="写读互斥">
-        写读互斥
-        <a data-clipboard-text="http://example.org/4.Lock/4.2ReentrantReadWriteLock/#写读互斥" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 写读互斥" href="#%e5%86%99%e8%af%bb%e4%ba%92%e6%96%a5">
+    <h2 id="static-代码块实现单例">
+        static 代码块实现单例
+        <a data-clipboard-text="http://example.org/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.2%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/#static-代码块实现单例" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor static 代码块实现单例" href="#static-%e4%bb%a3%e7%a0%81%e5%9d%97%e5%ae%9e%e7%8e%b0%e5%8d%95%e4%be%8b">
             <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
         </a>
     </h2>
-</div><p>将 Run.java 中的 线程 A 和线程 B 的执行顺序颠倒，也会产生互斥。</p>
-<blockquote>
-<p>A.start();<br>
-Thread.sleep(1000);<br>
-B.start();<br></p>
-</blockquote>
+</div><p>实质上，静态块的实现原理与静态属性相同，即</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"> <span class="kd">private</span> <span class="kd">static</span> <span class="n">MyObject</span> <span class="n">myObject</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+ <span class="kd">static</span> <span class="o">{</span>
+        <span class="n">myObject</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyObject</span><span class="o">();</span>
+    <span class="o">}</span>
+</code></pre></div><p>相当于</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"> <span class="kd">private</span> <span class="kd">static</span> <span class="n">MyObject</span> <span class="n">myObject</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyObject</span><span class="o">();</span>
+</code></pre></div><hr>
+<details>
+<summary>静态块实现单例</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.io.Serializable</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyObject</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">MyObject</span> <span class="n">myObject</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="kd">static</span> <span class="o">{</span>
+        <span class="n">myObject</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyObject</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="nf">MyObject</span><span class="o">(){}</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">MyObject</span> <span class="nf">getInstance</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">MyObject</span><span class="o">.</span><span class="na">myObject</span><span class="o">;</span>
+    <span class="o">}</span>
+    <span class="c1">//用于解决反序列化问题
+</span><span class="c1"></span>    <span class="kd">protected</span> <span class="n">Object</span> <span class="nf">readResolve</span><span class="o">(){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;调用了 readResolve&#34;</span><span class="o">);</span>
+        <span class="k">return</span> <span class="n">MyObject</span><span class="o">.</span><span class="na">myObject</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="enum-实现单例">
+        enum 实现单例
+        <a data-clipboard-text="http://example.org/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/6.2%E5%85%B6%E4%BB%96%E6%96%B9%E6%B3%95%E5%AE%9E%E7%8E%B0%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/#enum-实现单例" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor enum 实现单例" href="#enum-%e5%ae%9e%e7%8e%b0%e5%8d%95%e4%be%8b">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>这种方式实现单例，序列化的对象和反序列化得到的对象是同一个对象。</p>
+<details>
+<summary>MyObject.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kn">import</span> <span class="nn">java.io.Serializable</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyObject</span> <span class="kd">implements</span> <span class="n">Serializable</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">enum</span> <span class="n">MyEnumSingleton</span> <span class="o">{</span>
+        <span class="n">stringFactory</span><span class="o">;</span>
+        <span class="kd">private</span> <span class="n">String</span> <span class="n">string</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">(</span><span class="s">&#34;Fine&#34;</span><span class="o">);</span>
+        <span class="kd">public</span> <span class="n">String</span> <span class="nf">get</span><span class="o">(){</span>
+            <span class="k">return</span> <span class="n">string</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">};</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">get</span><span class="o">(){</span>
+        <span class="k">return</span> <span class="n">MyEnumSingleton</span><span class="o">.</span><span class="na">stringFactory</span><span class="o">.</span><span class="na">get</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+
+</code></pre></div></details>
+<details>
+<summary>MyThread.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyThread</span> <span class="kd">extends</span> <span class="n">Thread</span><span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">(){</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">5</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">MyObject</span><span class="o">.</span><span class="na">get</span><span class="o">().</span><span class="na">hashCode</span><span class="o">());</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
+<details>
+<summary>Run.java</summary>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Run</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">MyThread</span> <span class="n">A</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">();</span>
+        <span class="n">MyThread</span> <span class="n">B</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">();</span>
+        <span class="n">MyThread</span> <span class="n">C</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MyThread</span><span class="o">();</span>
+
+        <span class="n">A</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">B</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+        <span class="n">C</span><span class="o">.</span><span class="na">start</span><span class="o">();</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></details>
 
     </article>
 
