@@ -10,11 +10,17 @@
 
 
 
-    <meta name="description" content=" 立即加载 延迟加载 静态内置类实现单例模式 序列化与反序列化的单例模式 static 代码块实现单例模式 enum 实现单例模式  ">
+    <meta name="description" content="线程组 ThreadGroup     ThreadGroup thredGroup = Thread.currentThread().getThreadGroup()
+  SimpleDateFormat 非线程安全    解决方法：
+ 使用静态方法生成多个 SimpleDateFormat 实例。 使用 ThreadLocal 使得不同对象绑定到不同线程。   public static ThreadLocal&lt;SimpleDateFormat&gt; = new ThreadLocal&lt;SimpleDateFormat&gt;();
+ 线程异常的处理    thread.setUncaughtExceptionHandler(new UncaughtExceptionHandler(){ @Override public void uncaughtException(Thread t, Throwable w){ System.out.println(&#34;线程出现异常&#34;); } });  线程组异常    线程组内一个线程出现异常，不会影响其他线程的运行。
+如果需要 ThreadGroup 捕获组内线程的异常，则重写 ThreadGroup 的 uncaughtException 即可。
+异常只能被捕获一次，线程组内如果有线程已经 catch 了异常，那么 ThreadGroup 无法捕获异常。
+异常捕获的先后    先是线程对象，然后是静态类，再是线程组对象。">
 
 
 
-    <title>6.单例模式与多线程 | 技术学习笔记</title>
+    <title>7.补充 | 技术学习笔记</title>
 
     <link rel="icon" href="/favicon/favicon-32x32.png" type="image/x-icon">
 
@@ -35,7 +41,7 @@
 <link rel="preload" href="/custom.css" as="style">
 <link rel="stylesheet" href="/custom.css" media="all">
 
-<link rel="alternate" type="application/rss+xml" href="http://example.org/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/index.xml" title="技术学习笔记" />
+<link rel="alternate" type="application/rss+xml" href="http://example.org/7.%E8%A1%A5%E5%85%85/index.xml" title="技术学习笔记" />
 
 
 <!-- Made with Geekdoc theme https://github.com/thegeeklab/hugo-geekdoc -->
@@ -579,7 +585,7 @@
             
             
                 <span class="flex">
-                    <a href="/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="gdoc-nav__entry is-active">
+                    <a href="/6.%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F%E4%B8%8E%E5%A4%9A%E7%BA%BF%E7%A8%8B/" class="gdoc-nav__entry ">
                         6.单例模式与多线程
                     </a>
                 </span>
@@ -661,7 +667,7 @@
             
             
                 <span class="flex">
-                    <a href="/7.%E8%A1%A5%E5%85%85/" class="gdoc-nav__entry ">
+                    <a href="/7.%E8%A1%A5%E5%85%85/" class="gdoc-nav__entry is-active">
                         7.补充
                     </a>
                 </span>
@@ -778,7 +784,7 @@
         
     
     
-        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>6.单例模式与多线程</span><meta itemprop='position' content='2' /></li>
+        <li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><a itemscope itemtype='https://schema.org/WebPage' itemprop='item' itemid='/' href='/'><span itemprop='name'>简介</span></a><meta itemprop='position' content='1' /></li><li> / </li><li itemprop='itemListElement' itemscope itemtype='https://schema.org/ListItem'><span itemprop='name'>7.补充</span><meta itemprop='position' content='2' /></li>
     
 
     
@@ -791,15 +797,65 @@
 
 
     <article class="gdoc-markdown gdoc-markdown__align--left">
-        <h1>6.单例模式与多线程</h1>
-        <ul>
-<li>立即加载</li>
-<li>延迟加载</li>
-<li>静态内置类实现单例模式</li>
-<li>序列化与反序列化的单例模式</li>
-<li>static 代码块实现单例模式</li>
-<li>enum 实现单例模式</li>
-</ul>
+        <h1>7.补充</h1>
+        <div class="gdoc-page__anchorwrap">
+    <h2 id="线程组-threadgroup">
+        线程组 ThreadGroup
+        <a data-clipboard-text="http://example.org/7.%E8%A1%A5%E5%85%85/#线程组-threadgroup" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 线程组 ThreadGroup" href="#%e7%ba%bf%e7%a8%8b%e7%bb%84-threadgroup">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><blockquote>
+<p><code>ThreadGroup thredGroup = Thread.currentThread().getThreadGroup()</code></p>
+</blockquote>
+<hr>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="simpledateformat-非线程安全">
+        SimpleDateFormat 非线程安全
+        <a data-clipboard-text="http://example.org/7.%E8%A1%A5%E5%85%85/#simpledateformat-非线程安全" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor SimpleDateFormat 非线程安全" href="#simpledateformat-%e9%9d%9e%e7%ba%bf%e7%a8%8b%e5%ae%89%e5%85%a8">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>解决方法：</p>
+<ol>
+<li>使用静态方法生成多个 SimpleDateFormat 实例。</li>
+<li>使用 ThreadLocal 使得不同对象绑定到不同线程。</li>
+</ol>
+<blockquote>
+<p><code>public static ThreadLocal&lt;SimpleDateFormat&gt; = new ThreadLocal&lt;SimpleDateFormat&gt;();</code></p>
+</blockquote>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="线程异常的处理">
+        线程异常的处理
+        <a data-clipboard-text="http://example.org/7.%E8%A1%A5%E5%85%85/#线程异常的处理" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 线程异常的处理" href="#%e7%ba%bf%e7%a8%8b%e5%bc%82%e5%b8%b8%e7%9a%84%e5%a4%84%e7%90%86">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="n">thread</span><span class="o">.</span><span class="na">setUncaughtExceptionHandler</span><span class="o">(</span><span class="k">new</span> <span class="n">UncaughtExceptionHandler</span><span class="o">(){</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">uncaughtException</span><span class="o">(</span><span class="n">Thread</span> <span class="n">t</span><span class="o">,</span> <span class="n">Throwable</span> <span class="n">w</span><span class="o">){</span>
+        <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;线程出现异常&#34;</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">});</span>
+</code></pre></div><hr>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="线程组异常">
+        线程组异常
+        <a data-clipboard-text="http://example.org/7.%E8%A1%A5%E5%85%85/#线程组异常" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 线程组异常" href="#%e7%ba%bf%e7%a8%8b%e7%bb%84%e5%bc%82%e5%b8%b8">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>线程组内一个线程出现异常，不会影响其他线程的运行。</p>
+<p>如果需要 ThreadGroup 捕获组内线程的异常，则重写 ThreadGroup 的 uncaughtException 即可。</p>
+<p>异常只能被捕获一次，线程组内如果有线程已经 catch 了异常，那么 ThreadGroup 无法捕获异常。</p>
+<div class="gdoc-page__anchorwrap">
+    <h2 id="异常捕获的先后">
+        异常捕获的先后
+        <a data-clipboard-text="http://example.org/7.%E8%A1%A5%E5%85%85/#异常捕获的先后" class="gdoc-page__anchor gdoc-page__anchor--right clip" aria-label="Anchor 异常捕获的先后" href="#%e5%bc%82%e5%b8%b8%e6%8d%95%e8%8e%b7%e7%9a%84%e5%85%88%e5%90%8e">
+            <svg class="icon gdoc_link"><use xlink:href="#gdoc_link"></use></svg>
+        </a>
+    </h2>
+</div><p>先是线程对象，然后是静态类，再是线程组对象。</p>
 
     </article>
 
