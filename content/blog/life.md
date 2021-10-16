@@ -6,6 +6,8 @@ draft: true
 ## 关于 Hugo GeekDoc
 
 - GitHub 先新建一个仓库，并配置 Github Pages。
+- 把项目 clone 下来
+- 把 hugo 可运行程序放置到项目目录下。
 - 下载 geekdoc 的 **release**，放到 theme 文件夹下。
 - 配置config.toml
   ```toml
