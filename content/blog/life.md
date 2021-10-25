@@ -7,7 +7,8 @@ draft: true
 
 - GitHub 先新建一个仓库，并配置 Github Pages。
 - 把项目 clone 下来
-- 把 hugo 可运行程序放置到项目目录下。
+- 把 hugo 可运行程序放置到项目目录下
+- cmd 进入项目文件夹，并输入 `hugo new site test` 便可以生产网站
 - 下载 geekdoc 的 **release**，放到 theme 文件夹下。
 - 配置config.toml
   ```toml
